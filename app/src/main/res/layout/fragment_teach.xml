@@ -4,7 +4,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.TeachFragment">
+    tools:context=".fragments.TeachFragment"
+    android:background="@drawable/background_main"
+    >
+
+    <TextView
+        android:visibility="visible"
+        android:id="@+id/no_active_courses_text_teach"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No teaching courses added"
+        android:textColor="@color/textColor"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add_teach_button"

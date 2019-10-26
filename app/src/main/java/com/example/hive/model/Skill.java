@@ -9,10 +9,10 @@ public class Skill implements Parcelable {
     private String skillDescription;
     private String skillTitle;
 
-    public Skill(String skillTitle, String skillDifficulty, String skillName) {
+    public Skill(String skillTitle, String skillDifficulty, String skillDescription) {
         this.skillTitle = skillTitle;
         this.skillDifficulty = skillDifficulty;
-        this.skillDescription = skillName;
+        this.skillDescription = skillDescription;
     }
 
     protected Skill(Parcel in) {

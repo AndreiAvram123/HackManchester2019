@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +23,7 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -31,11 +31,12 @@ import de.hdodenhof.circleimageview.CircleImageView;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MapsFragment extends Fragment implements OnMapReadyCallback {
+public class MapsFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
     MapView mapView;
     GoogleMap map;
     View customMarker;
+    private MapsFragmentInterface mapsFragmentInterface;
 
 
     public static MapsFragment newInstance(){
@@ -45,6 +46,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_maps, container, false);
+        mapsFragmentInterface = (MapsFragmentInterface) getActivity();
          customMarker = inflater.inflate(R.layout.custom_marker,null);
         CircleImageView markerImage = customMarker.findViewById(R.id.user_dp);
         // Gets the MapView from the XML layout and creates it
@@ -81,7 +83,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        Log.d("Test","Map ready");
+        googleMap.setOnMarkerClickListener(this);
         map = googleMap;
         googleMap.setMyLocationEnabled(true);
         LatLng latLng = new LatLng(53.47723, -2.25487);
@@ -93,18 +95,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         ).setIcon(BitmapDescriptorFactory
                 .fromBitmap(createCustomMarker(getContext(),R.drawable.profile_placeholder,"Marker in Industry museum")));
 
-        LatLng latLng2 = new LatLng(53.477076, -2.252677);
-        LatLng latLng3 = new LatLng(53.478047, -2.256169);
-
-        map.addMarker(new MarkerOptions().position(latLng)
-        ).setIcon(BitmapDescriptorFactory
-                .fromBitmap(createCustomMarker(getContext(),R.drawable.profile_placeholder,"Marker in Industry museum")));
-        map.addMarker(new MarkerOptions().position(latLng2)
-        ).setIcon(BitmapDescriptorFactory
-                .fromBitmap(createCustomMarker(getContext(),R.drawable.profile_placeholder,"Marker in Industry museum")));
-        map.addMarker(new MarkerOptions().position(latLng3)
-        ).setIcon(BitmapDescriptorFactory
-                .fromBitmap(createCustomMarker(getContext(),R.drawable.profile_placeholder,"Marker in Industry museum")));
 
     }
 
@@ -133,4 +123,12 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         mapView.onLowMemory();
     }
 
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        mapsFragmentInterface.openUserProfile();
+        return false;
+    }
+    public interface MapsFragmentInterface{
+        void openUserProfile();
+    }
 }

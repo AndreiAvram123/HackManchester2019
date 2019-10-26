@@ -11,5 +11,14 @@
         <item>Intermediate</item>
         <item>Advanced</item>
     </string-array>
+
+    <string-array name="abilities">
+        <item>Sports</item>
+        <item>Music</item>
+        <item>Arts</item>
+        <item>Programming</item>
+        <item>Crafting</item>
+    </string-array>
+
     <string name="title_activity_maps">Map</string>
 </resources>

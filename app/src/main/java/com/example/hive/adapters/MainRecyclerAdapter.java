@@ -1,6 +1,5 @@
 package com.example.hive.adapters;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,14 +14,18 @@ import com.example.hive.model.Skill;
 import java.util.ArrayList;
 
 public class MainRecyclerAdapter extends  RecyclerView.Adapter<MainRecyclerAdapter.ViewHolder>  {
-
     private ArrayList<Skill> skills = new ArrayList<>();
     private MainRecyclerAdapterInterface mainRecyclerAdapterInterface;
 
+    public MainRecyclerAdapter(){
+
+    }
+    public MainRecyclerAdapter(ArrayList<Skill> skills){
+        this.skills = skills;
+    }
 
     public void addSkill(Skill skill){
         skills.add(skill);
-        Log.d("dfdf",this + "");
         notifyDataSetChanged();
     }
 

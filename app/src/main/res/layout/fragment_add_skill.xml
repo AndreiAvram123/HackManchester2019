@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.AddSkillFragment">
+    tools:context=".fragments.AddSkillFragment"
+    android:background="@drawable/background_main"
+    >
 
     <TextView
         android:id="@+id/description_field_label"
@@ -19,6 +21,7 @@
         app:layout_constraintTop_toBottomOf="@+id/difficulty_input_label" />
 
     <TextView
+        android:textColor="@color/textColor"
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -129,11 +132,13 @@
         app:layout_constraintTop_toBottomOf="@+id/description_field_label" />
 
     <Button
+        android:textColor="@color/textColor"
+        android:background="#8a9cff"
         android:id="@+id/finish_add_skill_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        android:text="Button"
+        android:text="@string/add_skill_teach_title"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

@@ -13,11 +13,15 @@ import com.example.hive.adapters.MainRecyclerAdapter;
 import com.example.hive.fragments.AddSkillFragment;
 import com.example.hive.fragments.ExtendedSkillFragment;
 import com.example.hive.fragments.MainFragment;
+import com.example.hive.fragments.MapsFragment;
+import com.example.hive.fragments.MyProfileFragment;
 import com.example.hive.fragments.TeachFragment;
+import com.example.hive.fragments.UserProfileFragment;
 import com.example.hive.model.Skill;
 
 public class MainActivity extends AppCompatActivity implements TeachFragment.TeachFragmentInterface,
-        AddSkillFragment.AddSkillFragmentInterface, MainRecyclerAdapter.MainRecyclerAdapterInterface {
+        AddSkillFragment.AddSkillFragmentInterface, MainRecyclerAdapter.MainRecyclerAdapterInterface,
+        MapsFragment.MapsFragmentInterface, MyProfileFragment.MyProfilePictureInterface {
 
     private FragmentManager fragmentManager;
     private MainFragment mainFragment;
@@ -85,6 +89,23 @@ public class MainActivity extends AppCompatActivity implements TeachFragment.Tea
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.container_main,ExtendedSkillFragment.newInstance(skill))
+                .addToBackStack(null)
+                .commit();
+    }
+
+    @Override
+    public void openUserProfile() {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.container_main, UserProfileFragment.newInstance())
+                .addToBackStack(null)
+                .commit();
+    }
+
+    @Override
+    public void showMainFragment() {
+        fragmentManager.beginTransaction()
+                .replace(R.id.container_main,mainFragment)
                 .addToBackStack(null)
                 .commit();
     }
