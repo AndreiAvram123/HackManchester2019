@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Hive</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="learn_level_label">Learn level</string>
+    <string name="teach_level_label">Teach level</string>
+    <string name="add_skill_teach_title">Add Skill</string>
+    <string-array name="difficulty_levels">
+        <item>Beginner</item>
+        <item>Intermediate</item>
+        <item>Advanced</item>
+    </string-array>
+</resources>

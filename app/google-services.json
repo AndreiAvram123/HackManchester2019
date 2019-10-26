@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1021022594465",
+    "firebase_url": "https://hive-ec30d.firebaseio.com",
+    "project_id": "hive-ec30d",
+    "storage_bucket": "hive-ec30d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1021022594465:android:2796b7fbe8e616e1e617e0",
+        "android_client_info": {
+          "package_name": "com.example.hive"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1021022594465-utbqbcaqt634qfb4qalnjvp9p4munskh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.hive",
+            "certificate_hash": "9b85c9d79d46116a56fbf50ce7e6bd46dbb2cae2"
+          }
+        },
+        {
+          "client_id": "1021022594465-kv6koh1fva3e6lbtc3jk08n9frstaanr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBk1c6M2ePc1GAgMrVOSpSc22ZnNlrqQHU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1021022594465-kv6koh1fva3e6lbtc3jk08n9frstaanr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
