@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.hive.R;
@@ -27,12 +26,9 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -45,15 +41,22 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     GoogleMap map;
     View customMarker;
     private MapsFragmentInterface mapsFragmentInterface;
+    private static final String KEY_USERS = "KEY_USERS";
+    private ArrayList<User>users;
 
-
-    public static MapsFragment newInstance(){
-        return new MapsFragment();
+    public static MapsFragment newInstance(@NonNull ArrayList<User> users){
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList(KEY_USERS,users);
+        MapsFragment mapsFragment = new MapsFragment();
+        mapsFragment.setArguments(bundle);
+        return mapsFragment;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_maps, container, false);
+         users = getArguments().getParcelableArrayList(KEY_USERS);
+
         mapsFragmentInterface = (MapsFragmentInterface) getActivity();
          customMarker = inflater.inflate(R.layout.custom_marker,null);
         CircleImageView markerImage = customMarker.findViewById(R.id.user_dp);
@@ -97,50 +100,24 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         googleMap.setOnMarkerClickListener(this);
         map = googleMap;
         googleMap.setMyLocationEnabled(true);
+        addMarkers();
         LatLng latLng = new LatLng(53.47723, -2.25487);
         CameraUpdate location = CameraUpdateFactory.newLatLngZoom(
                 latLng,15);
         map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         map.animateCamera(location);
-        addMarkers();
+
 
 
     }
 
     private void addMarkers() {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users");
-        databaseReference.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                User user = dataSnapshot.getValue(User.class);
-                LatLng latLng = new LatLng(user.getLatitude(),user.getLongitute());
-
-                map.addMarker(new MarkerOptions().position(latLng)
-                ).setIcon(BitmapDescriptorFactory.fromBitmap(
-                        createCustomMarker(getContext(),user.getPictureUri(),user.getUsername())));
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
+        for(User user :users){
+            LatLng latLng = new LatLng(user.getLatitude(),user.getLongitute());
+            map.addMarker(new MarkerOptions().position(latLng)
+            ).setIcon(BitmapDescriptorFactory.fromBitmap(
+                    createCustomMarker(getContext(),user.getPictureUri(),user.getUsername())));
+        }
     }
 
     @Override
@@ -170,10 +147,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        mapsFragmentInterface.openUserProfile();
+        mapsFragmentInterface.openUserProfile(marker.getPosition());
         return false;
     }
     public interface MapsFragmentInterface{
-        void openUserProfile();
+        void openUserProfile(LatLng location);
     }
 }

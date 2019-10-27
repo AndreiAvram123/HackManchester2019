@@ -5,12 +5,15 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 
 import com.example.hive.adapters.MainRecyclerAdapter;
+import com.example.hive.adapters.UserProfileAdapter;
 import com.example.hive.fragments.AddSkillFragment;
 import com.example.hive.fragments.ExtendedSkillFragment;
 import com.example.hive.fragments.MainFragment;
@@ -19,25 +22,39 @@ import com.example.hive.fragments.MyProfileFragment;
 import com.example.hive.fragments.TeachFragment;
 import com.example.hive.fragments.UserProfileFragment;
 import com.example.hive.model.Skill;
+import com.example.hive.model.User;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements TeachFragment.TeachFragmentInterface,
         AddSkillFragment.AddSkillFragmentInterface, MainRecyclerAdapter.MainRecyclerAdapterInterface,
-        MapsFragment.MapsFragmentInterface, MyProfileFragment.MyProfilePictureInterface {
+        MapsFragment.MapsFragmentInterface, MyProfileFragment.MyProfilePictureInterface,
+        UserProfileAdapter.UserProfileAdapterInterface {
 
     private FragmentManager fragmentManager;
     private MainFragment mainFragment;
     private static final int CODE_FINE_LOCATION = 2;
     private static final int CODE_COURSE_LOCATION = 3;
     private FirebaseAuth firebaseAuth;
-
-
+    private DatabaseReference databaseReference;
+    private ArrayList<User> users;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mainFragment = MainFragment.newInstance();
+        users = new ArrayList<>();
+        databaseReference = FirebaseDatabase.getInstance().getReference("users");
+        getSkillsToTeach();
+
+        mainFragment = MainFragment.newInstance(users);
         fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.container_main,mainFragment)
@@ -47,6 +64,45 @@ public class MainActivity extends AppCompatActivity implements TeachFragment.Tea
 
         getPermissions();
         firebaseAuth = FirebaseAuth.getInstance();
+    }
+
+    private void getSkillsToTeach() {
+
+        databaseReference.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                User user = dataSnapshot.getValue(User.class);
+                users.add(user);
+                if(user.getEmail().toLowerCase().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail().toLowerCase())) {
+                   if(user.getSkillsToTeach()!=null) {
+                       for (Skill skill : user.getSkillsToTeach()) {
+                           mainFragment.addSkillToTeachFragment(skill);
+                       }
+                   }
+                }
+
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void getPermissions() {
@@ -80,7 +136,6 @@ public class MainActivity extends AppCompatActivity implements TeachFragment.Tea
 
     @Override
     public void onBackPressed() {
-
         super.onBackPressed();
     }
 
@@ -88,7 +143,42 @@ public class MainActivity extends AppCompatActivity implements TeachFragment.Tea
     @Override
     public void addSkillToTeachFragment(Skill skill) {
        mainFragment.addSkillToTeachFragment(skill);
+       addTeachSkillToDatabase(skill);
        getSupportFragmentManager().popBackStack();
+    }
+
+    private void addTeachSkillToDatabase(Skill skill){
+        databaseReference.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                User user = dataSnapshot.getValue(User.class);
+                user.addSkillToTeach(skill);
+                if(user.getEmail().toLowerCase().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail().toLowerCase()))
+                {
+                  dataSnapshot.getRef().child("skillsToTeach").setValue(user.getSkillsToTeach());
+                }
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override
@@ -101,12 +191,22 @@ public class MainActivity extends AppCompatActivity implements TeachFragment.Tea
     }
 
     @Override
-    public void openUserProfile() {
+    public void openUserProfile(LatLng location) {
+        User user = getUserProfile(location);
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.container_main, UserProfileFragment.newInstance())
+                .replace(R.id.container_main, UserProfileFragment.newInstance(user))
                 .addToBackStack(null)
                 .commit();
+    }
+
+    private User getUserProfile(LatLng location) {
+        for(User user :users){
+            if(user.getLatitude() == location.latitude && user.getLongitute() == location.longitude){
+                return user;
+            }
+        }
+        return null;
     }
 
     @Override
@@ -122,5 +222,46 @@ public class MainActivity extends AppCompatActivity implements TeachFragment.Tea
         firebaseAuth.signOut();
         startActivity(new Intent(this,StartScreenActivity.class));
         finish();
+    }
+
+    @Override
+    public void addSkillToCurrentUser(Skill skill) {
+        getSupportFragmentManager().popBackStack();
+        mainFragment.addSkillToLearnFragment(skill);
+        addInterestToFirebase(skill);
+    }
+
+    private void addInterestToFirebase(Skill skill) {
+        databaseReference.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                User user = dataSnapshot.getValue(User.class);
+                user.addInterest(skill);
+                if(user.getEmail().toLowerCase().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail().toLowerCase()))
+                {
+                    dataSnapshot.getRef().child("interests").setValue(user.getSkillsToTeach());
+                }
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 }

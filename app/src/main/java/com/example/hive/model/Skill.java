@@ -3,11 +3,19 @@ package com.example.hive.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.firebase.database.IgnoreExtraProperties;
+
+@IgnoreExtraProperties
 public class Skill implements Parcelable {
     private int skillId;
     private String skillDifficulty;
     private String skillDescription;
     private String skillTitle;
+
+    public Skill(){
+
+    }
+
 
     public Skill(String skillTitle, String skillDifficulty, String skillDescription) {
         this.skillTitle = skillTitle;

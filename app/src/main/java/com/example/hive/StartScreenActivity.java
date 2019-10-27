@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentManager;
 
 import com.example.hive.fragments.LoginFragment;
 import com.example.hive.fragments.SignUpFragment;
+import com.example.hive.model.Skill;
 import com.example.hive.model.User;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
@@ -140,8 +141,8 @@ public class StartScreenActivity extends AppCompatActivity implements
                     if (task.isSuccessful()) {
                         firebaseAuth.getCurrentUser().sendEmailVerification();
                         updateNicknameAndProfilePicture(nickname,pictureID);
-                        ArrayList<String> interests = new ArrayList<>();
-                        interests.add(interest);
+                        ArrayList<Skill> interests = new ArrayList<>();
+                        interests.add(new Skill(interest,"",""));
                          LatLng randomLocation  =getRandomPosition();
                          User user = new User(nickname,email,interests,new ArrayList<>(),randomLocation.latitude,
                                  randomLocation.longitude,getPictureURI(pictureID).toString());

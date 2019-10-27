@@ -57,8 +57,8 @@ public class MainRecyclerAdapter extends  RecyclerView.Adapter<MainRecyclerAdapt
         public ViewHolder(@NonNull View itemView) {
              super(itemView);
              layout = itemView;
-             difficulty = itemView.findViewById(R.id.difficulty_value);
-             title = itemView.findViewById(R.id.skill_title);
+             difficulty = itemView.findViewById(R.id.difficulty_value_user_profile);
+             title = itemView.findViewById(R.id.skill_title_user_profile);
         }
     }
     public interface MainRecyclerAdapterInterface{

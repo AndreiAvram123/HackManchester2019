@@ -15,28 +15,40 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.example.hive.R;
 import com.example.hive.model.Skill;
+import com.example.hive.model.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 
 
 public class MainFragment extends Fragment {
 
     private ViewPager viewPager;
-    private FragmentLearn fragmentLearn;
+    private FragmentLearn fragmentlearn;
     private TeachFragment teachFragment;
     private MapsFragment mapsFragment;
     private ImageView profileImage;
     private FirebaseAuth firebaseAuth;
     private TextView userName;
+    private ArrayList<User>users;
+    private static final String KEY_USERS = "KEY_USERS";
     public MainFragment() {
         // Required empty public constructor
     }
 
 
     // TODO: Rename and change types and number of parameters
-    public static MainFragment newInstance() {
-        return new MainFragment();
+    public static MainFragment newInstance(ArrayList<User> users) {
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList(KEY_USERS,users);
+        MainFragment mainFragment = new MainFragment();
+        mainFragment.setArguments(bundle);
+        return mainFragment;
+    }
+    public void addSkillToLearnFragment(Skill skill){
+       fragmentlearn.addInterest(skill);
     }
 
     public void addSkillToTeachFragment(Skill skill) {
@@ -46,9 +58,9 @@ public class MainFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        fragmentLearn = FragmentLearn.newInstance();
+        fragmentlearn =  new FragmentLearn();
         teachFragment = TeachFragment.newInstance();
-        mapsFragment = MapsFragment.newInstance();
+        mapsFragment = MapsFragment.newInstance(getArguments().getParcelableArrayList(KEY_USERS));
         firebaseAuth = FirebaseAuth.getInstance();
 
     }
@@ -83,7 +95,7 @@ public class MainFragment extends Fragment {
 
                 switch (position) {
                     case 0:
-                        return fragmentLearn;
+                        return fragmentlearn;
                     case 1: {
                         return teachFragment;
                     }

@@ -2,7 +2,6 @@ package com.example.hive.fragments;
 
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +33,9 @@ public class TeachFragment extends Fragment {
 
     // TODO: Rename and change types and number of parameters
     public static TeachFragment newInstance() {
-        return new TeachFragment();
+        TeachFragment teachFragment = new TeachFragment();
+
+        return teachFragment;
     }
 
 
@@ -47,8 +48,6 @@ public class TeachFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        Log.d("Text","yo");
         View layout = inflater.inflate(R.layout.fragment_teach, container, false);
         teachFragmentInterface = (TeachFragmentInterface) getActivity();
         initializeRecyclerView(layout);

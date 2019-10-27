@@ -14,7 +14,7 @@
             >
 
             <TextView
-                android:id="@+id/skill_title"
+                android:id="@+id/skill_title_user_profile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"

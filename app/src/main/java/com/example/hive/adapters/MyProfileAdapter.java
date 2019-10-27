@@ -54,7 +54,7 @@ public class MyProfileAdapter extends RecyclerView.Adapter<MyProfileAdapter.View
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            title = itemView.findViewById(R.id.skill_title);
+            title = itemView.findViewById(R.id.skill_title_user_profile);
             removeItem = itemView.findViewById(R.id.remove_skill_my_profile);
         }
     }
