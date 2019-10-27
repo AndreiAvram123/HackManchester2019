@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 import com.example.hive.R;
 import com.example.hive.model.Utilities;
@@ -27,7 +28,11 @@ public class SignUpFragment  extends AuthenticationFragment {
     private TextView errorTextView;
     private ImageView backImage;
     private SignUpFragmentCallback signUpFragmentCallback;
-
+    private  ImageView picture1;
+    private  ImageView picture2;
+    private  ImageView picture3;
+    private  ImageView picture4;
+    private int profilePictureSelected = 0;
     public static final String FRAGMENT_TAG = "FRAGMENT_TAG";
 
     public static SignUpFragment newInstance() {
@@ -97,8 +102,38 @@ public class SignUpFragment  extends AuthenticationFragment {
         errorTextView = layout.findViewById(R.id.error_message_sign_up);
         backImage = layout.findViewById(R.id.back_image_sign_up);
 
-        configureButtons();
+         picture1 = layout.findViewById(R.id.profile_picture1);
+         picture2 = layout.findViewById(R.id.profile_picture2);
+         picture3 = layout.findViewById(R.id.profile_picture3);
+         picture4 = layout.findViewById(R.id.profile_picture4);
+        picture1.setOnClickListener(view ->{
+            clearPictures();
+            profilePictureSelected =1;
+            picture1.setBackground(ContextCompat.getDrawable(getContext(),R.drawable.custom_image_view_background));
+    });
+        picture2.setOnClickListener(view ->{
+            clearPictures();
+            profilePictureSelected =2;
+            picture2.setBackground(ContextCompat.getDrawable(getContext(),R.drawable.custom_image_view_background));
+        });
+        picture3.setOnClickListener(view ->{
+            clearPictures();
+            profilePictureSelected =3;
+            picture3.setBackground(ContextCompat.getDrawable(getContext(),R.drawable.custom_image_view_background));
+        });
+        picture4.setOnClickListener(view ->{
+            clearPictures();
+            profilePictureSelected =4;
+            picture4.setBackground(ContextCompat.getDrawable(getContext(),R.drawable.custom_image_view_background));
+        });
 
+        configureButtons();
+    }
+    private void clearPictures(){
+        picture1.setBackground(null);
+        picture2.setBackground(null);
+        picture3.setBackground(null);
+        picture4.setBackground(null);
     }
 
 
@@ -137,7 +172,7 @@ public class SignUpFragment  extends AuthenticationFragment {
 
         if (areCredentialsValid(email, password, reenteredPassword, nickname)) {
             toggleLoadingBar();
-            signUpFragmentCallback.signUp(email, password, nickname);
+            signUpFragmentCallback.signUp(email, password, nickname,profilePictureSelected);
 
         }
     }
@@ -163,7 +198,7 @@ public class SignUpFragment  extends AuthenticationFragment {
     }
 
     public interface SignUpFragmentCallback {
-        void signUp(String email, String password, String nickname);
+        void signUp(String email, String password, String nickname,int pictureID);
     }
 
 }

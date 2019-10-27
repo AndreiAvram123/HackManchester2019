@@ -6,8 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -18,6 +20,9 @@ import com.example.hive.adapters.MyProfileAdapter;
 import com.example.hive.model.CustomDivider;
 import com.example.hive.model.Skill;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -31,8 +36,11 @@ public class MyProfileFragment extends Fragment {
     private MyProfileAdapter myProfileAdapter;
     private Spinner myProfileSpinner;
     private FloatingActionButton addAbilityButton;
-   private MyProfilePictureInterface myProfilePictureInterface;
-
+    private MyProfilePictureInterface myProfilePictureInterface;
+    private FirebaseUser firebaseUser;
+    private ImageView profilePicture;
+    private TextView email;
+    private TextView userName;
 
     public MyProfileFragment() {
         // Required empty public constructor
@@ -48,9 +56,27 @@ public class MyProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View layout = inflater.inflate(R.layout.fragment_my_profile_picture, container, false);
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        profilePicture = layout.findViewById(R.id.profile_picture_my_profile);
+        Picasso.get().load(firebaseUser.getPhotoUrl())
+                .into(profilePicture);
+
+        userName = layout.findViewById(R.id.my_profile_name);
+        userName.setText(firebaseUser.getDisplayName());
+
+
+        email = layout.findViewById(R.id.email_my_profile);
+        email.setText(firebaseUser.getEmail());
+
+
         addAbilityButton = layout.findViewById(R.id.add_skill_my_profile);
         addAbilityButton.setOnClickListener(view -> myProfileAdapter.addAbility(new Skill(
                 myProfileSpinner.getSelectedItem().toString(),"","")));
+
+        Button signOutButton = layout.findViewById(R.id.sign_out_button);
+        signOutButton.setOnClickListener(view -> myProfilePictureInterface.signOutCurrentUser());
+
 
          initializeRecyclerView(layout);
         myProfilePictureInterface = (MyProfilePictureInterface) getActivity();
@@ -88,5 +114,6 @@ public class MyProfileFragment extends Fragment {
 
     public interface MyProfilePictureInterface{
         void showMainFragment();
+        void signOutCurrentUser();
     }
 }

@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,6 +15,9 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.example.hive.R;
 import com.example.hive.model.Skill;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.squareup.picasso.Picasso;
 
 
 public class MainFragment extends Fragment {
@@ -23,7 +27,8 @@ public class MainFragment extends Fragment {
     private TeachFragment teachFragment;
     private MapsFragment mapsFragment;
     private ImageView profileImage;
-
+    private FirebaseAuth firebaseAuth;
+    private TextView userName;
     public MainFragment() {
         // Required empty public constructor
     }
@@ -44,6 +49,7 @@ public class MainFragment extends Fragment {
         fragmentLearn = FragmentLearn.newInstance();
         teachFragment = TeachFragment.newInstance();
         mapsFragment = MapsFragment.newInstance();
+        firebaseAuth = FirebaseAuth.getInstance();
 
     }
 
@@ -51,12 +57,24 @@ public class MainFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_main, container, false);
+        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+
+        userName = layout.findViewById(R.id.user_name) ;
+        userName.setText(firebaseUser.getDisplayName());
+
 
         profileImage = layout.findViewById(R.id.profile_picture);
+        Picasso.get()
+                .load(firebaseUser.getPhotoUrl())
+                .into(profileImage);
+
+
         profileImage.setOnClickListener(view -> getFragmentManager()
                 .beginTransaction().replace(R.id.container_main, MyProfileFragment.newInstance())
                 .addToBackStack(null)
                 .commit());
+
+
         viewPager = layout.findViewById(R.id.view_pager);
         viewPager.setAdapter(new FragmentPagerAdapter(getChildFragmentManager()) {
             @NonNull

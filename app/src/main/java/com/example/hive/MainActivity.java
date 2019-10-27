@@ -1,6 +1,7 @@
 package com.example.hive;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 
@@ -18,6 +19,7 @@ import com.example.hive.fragments.MyProfileFragment;
 import com.example.hive.fragments.TeachFragment;
 import com.example.hive.fragments.UserProfileFragment;
 import com.example.hive.model.Skill;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity implements TeachFragment.TeachFragmentInterface,
         AddSkillFragment.AddSkillFragmentInterface, MainRecyclerAdapter.MainRecyclerAdapterInterface,
@@ -27,6 +29,10 @@ public class MainActivity extends AppCompatActivity implements TeachFragment.Tea
     private MainFragment mainFragment;
     private static final int CODE_FINE_LOCATION = 2;
     private static final int CODE_COURSE_LOCATION = 3;
+    private FirebaseAuth firebaseAuth;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements TeachFragment.Tea
 
 
         getPermissions();
+        firebaseAuth = FirebaseAuth.getInstance();
     }
 
     private void getPermissions() {
@@ -108,5 +115,12 @@ public class MainActivity extends AppCompatActivity implements TeachFragment.Tea
                 .replace(R.id.container_main,mainFragment)
                 .addToBackStack(null)
                 .commit();
+    }
+
+    @Override
+    public void signOutCurrentUser() {
+        firebaseAuth.signOut();
+        startActivity(new Intent(this,StartScreenActivity.class));
+        finish();
     }
 }

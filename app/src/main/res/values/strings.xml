@@ -73,4 +73,5 @@
     </string-array>
 
     <string name="title_activity_maps">Map</string>
+    <string name="error_email_not_verified">Please check your email first</string>
 </resources>

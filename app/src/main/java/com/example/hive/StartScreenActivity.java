@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -50,6 +51,7 @@ public class StartScreenActivity extends AppCompatActivity implements
     private void displayLoginFragment() {
         fragmentManager.beginTransaction().
                 replace(R.id.start_screen_placeholder, loginFragment)
+                .addToBackStack(null)
                 .commit();
 
     }
@@ -87,7 +89,7 @@ public class StartScreenActivity extends AppCompatActivity implements
                         if (firebaseAuth.getCurrentUser().isEmailVerified()) {
                             startMainActivity();
                         } else {
-
+                            loginFragment.displayErrorMessage(getString(R.string.error_email_not_verified));
                         }
                     } else {
                         loginFragment.displayErrorMessage(getString(R.string.error_invalid_login_details));
@@ -106,12 +108,13 @@ public class StartScreenActivity extends AppCompatActivity implements
      * @param password
      * @param nickname
      */
-    private void pushSignUpRequest(String email, String password, String nickname) {
+    private void pushSignUpRequest(String email, String password, String nickname,int pictureID) {
         firebaseAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         firebaseAuth.getCurrentUser().sendEmailVerification();
-                        updateNickname(nickname);
+                        updateNicknameAndProfilePicture(nickname,pictureID);
+                        getSupportFragmentManager().popBackStack();
                     } else {
                         signUpFragment.displayErrorMessage(getString(R.string.error_create_account));
                     }
@@ -119,11 +122,37 @@ public class StartScreenActivity extends AppCompatActivity implements
                 });
     }
 
-    private void updateNickname(String nickname) {
+    private void updateNicknameAndProfilePicture(String nickname,int pictureId) {
+        Uri uri = null;
+        switch (pictureId) {
+            case 1: {
+                uri = Uri.parse("https://firebasestorage.googleapis.com/v0/b/hive-ec30d.appspot.com/o/profile_picture1.png?alt=media&token=fc2b4ade-0564-4ab8-b1f1-e70ddd9ce7fb");
+                break;
+            }
+            case 2: {
+                uri = Uri.parse("https://firebasestorage.googleapis.com/v0/b/hive-ec30d.appspot.com/o/profile_picture2.png?alt=media&token=526e4d60-24f6-4273-884f-423cff92a616");
+                break;
+            }
+            case 3: {
+                uri = Uri.parse("https://firebasestorage.googleapis.com/v0/b/hive-ec30d.appspot.com/o/profile_picture3.png?alt=media&token=5fc7ebe1-d875-4600-b319-514a1a48f005");
+                break;
+            }
+            case 4: {
+                uri = Uri.parse("https://firebasestorage.googleapis.com/v0/b/hive-ec30d.appspot.com/o/profile_picture4.png?alt=media&token=af89ddd9-ab71-4f29-91ef-d24dc13ff166");
+                break;
+            }
+            default:
+                uri = Uri.parse("https://firebasestorage.googleapis.com/v0/b/hive-ec30d.appspot.com/o/profile_picture1.png?alt=media&token=fc2b4ade-0564-4ab8-b1f1-e70ddd9ce7fb");
+
+
+        }
         firebaseAuth.getCurrentUser().updateProfile(new UserProfileChangeRequest.Builder()
                 .setDisplayName(nickname)
+                .setPhotoUri(uri)
                 .build());
+
     }
+
 
 
     /**
@@ -135,6 +164,7 @@ public class StartScreenActivity extends AppCompatActivity implements
         Intent startMainActivityIntent = new Intent(this, MainActivity.class);
         startMainActivityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(startMainActivityIntent);
+        finish();
     }
 
 
@@ -165,6 +195,7 @@ public class StartScreenActivity extends AppCompatActivity implements
             pushLoginRequest(email, password);
         } else {
             loginFragment.toggleLoadingBar();
+            loginFragment.displayErrorMessage(getString(R.string.no_internet_connection));
         }
     }
 
@@ -183,9 +214,9 @@ public class StartScreenActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void signUp(String email, String password, String nickname) {
+    public void signUp(String email, String password, String nickname,int pictureID) {
         if (isNetworkAvailable()) {
-            pushSignUpRequest(email, password, nickname);
+            pushSignUpRequest(email, password, nickname,pictureID);
         } else {
             signUpFragment.toggleLoadingBar();
         }
