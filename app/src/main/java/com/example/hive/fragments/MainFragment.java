@@ -51,6 +51,7 @@ public class MainFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_main, container, false);
+
         profileImage = layout.findViewById(R.id.profile_picture);
         profileImage.setOnClickListener(view -> getFragmentManager()
                 .beginTransaction().replace(R.id.container_main, MyProfileFragment.newInstance())
