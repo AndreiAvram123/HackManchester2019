@@ -77,6 +77,12 @@ public class MainActivity extends AppCompatActivity implements TeachFragment.Tea
                    if(user.getSkillsToTeach()!=null) {
                        for (Skill skill : user.getSkillsToTeach()) {
                            mainFragment.addSkillToTeachFragment(skill);
+
+                       }
+                       if(user.getInterests()!=null) {
+                           for (Skill skill : user.getInterests()) {
+                               mainFragment.addSkillToLearnFragment(skill);
+                           }
                        }
                    }
                 }

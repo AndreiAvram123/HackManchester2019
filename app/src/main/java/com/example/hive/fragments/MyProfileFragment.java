@@ -119,8 +119,10 @@ public class MyProfileFragment extends Fragment {
                 if(user.getEmail().toLowerCase()
                         .equals(firebaseUser.getEmail().toLowerCase())){
                     Log.d("test",user + "");
+                    if(user.getInterests()!=null){
                     for(Skill skill : user.getInterests()) {
                         myProfileAdapter.addAbility(skill);
+                    }
                     }
                 }
             }
