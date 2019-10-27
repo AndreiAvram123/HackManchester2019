@@ -12,10 +12,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.hive.R;
+import com.example.hive.model.User;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -25,6 +27,12 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -59,12 +67,15 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         return v;
     }
 
-    public static Bitmap createCustomMarker(Context context, @DrawableRes int resource, String _name) {
+    public static Bitmap createCustomMarker(Context context,  String resource, String _name) {
 
         View marker = ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.custom_marker, null);
 
         CircleImageView markerImage = marker.findViewById(R.id.user_dp);
-        markerImage.setImageResource(resource);
+
+        Picasso.get().load(resource)
+                .into(markerImage);
+
         TextView txt_name = marker.findViewById(R.id.name);
         txt_name.setText(_name);
 
@@ -91,10 +102,44 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                 latLng,15);
         map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         map.animateCamera(location);
-        map.addMarker(new MarkerOptions().position(latLng)
-        ).setIcon(BitmapDescriptorFactory
-                .fromBitmap(createCustomMarker(getContext(),R.drawable.profile_placeholder,"Marker in Industry museum")));
+        addMarkers();
 
+
+    }
+
+    private void addMarkers() {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users");
+        databaseReference.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                User user = dataSnapshot.getValue(User.class);
+                LatLng latLng = new LatLng(user.getLatitude(),user.getLongitute());
+
+                map.addMarker(new MarkerOptions().position(latLng)
+                ).setIcon(BitmapDescriptorFactory.fromBitmap(
+                        createCustomMarker(getContext(),user.getPictureUri(),user.getUsername())));
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
     }
 

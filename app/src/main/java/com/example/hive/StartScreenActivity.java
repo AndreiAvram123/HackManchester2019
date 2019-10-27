@@ -12,9 +12,16 @@ import androidx.fragment.app.FragmentManager;
 
 import com.example.hive.fragments.LoginFragment;
 import com.example.hive.fragments.SignUpFragment;
+import com.example.hive.model.User;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.ArrayList;
+import java.util.Random;
 
 public class StartScreenActivity extends AppCompatActivity implements
         LoginFragment.LoginFragmentCallback, SignUpFragment.SignUpFragmentCallback {
@@ -23,15 +30,34 @@ public class StartScreenActivity extends AppCompatActivity implements
     private LoginFragment loginFragment;
     private SignUpFragment signUpFragment;
     private FragmentManager fragmentManager;
-
+    private DatabaseReference databaseReference;
+    private ArrayList<LatLng> randomCoordinates ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.start_screen_activity);
+        getRandomLocations();
 
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference("users");
         prepareFragments();
         displayLoginFragment();
 
+    }
+
+    private void getRandomLocations() {
+        randomCoordinates = new ArrayList<>();
+        randomCoordinates.add(new LatLng(53.478033, -2.250867));
+        randomCoordinates.add(new LatLng(53.478228, -2.252476));
+        randomCoordinates.add(new LatLng(53.478902, -2.249971));
+        randomCoordinates.add(new LatLng(53.478091, -2.248823));
+        randomCoordinates.add(new LatLng(53.477794, -2.249402));
+        randomCoordinates.add(new LatLng(53.478634, -2.250955));
+        randomCoordinates.add(new LatLng(53.476120, -2.253047));
+    }
+    private LatLng getRandomPosition(){
+        Random  random = new Random();
+        return randomCoordinates.get(random.nextInt(randomCoordinates.size()));
     }
 
     /**
@@ -108,12 +134,18 @@ public class StartScreenActivity extends AppCompatActivity implements
      * @param password
      * @param nickname
      */
-    private void pushSignUpRequest(String email, String password, String nickname,int pictureID) {
+    private void pushSignUpRequest(String email, String password, String nickname,int pictureID,String interest) {
         firebaseAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         firebaseAuth.getCurrentUser().sendEmailVerification();
                         updateNicknameAndProfilePicture(nickname,pictureID);
+                        ArrayList<String> interests = new ArrayList<>();
+                        interests.add(interest);
+                         LatLng randomLocation  =getRandomPosition();
+                         User user = new User(nickname,email,interests,new ArrayList<>(),randomLocation.latitude,
+                                 randomLocation.longitude,getPictureURI(pictureID).toString());
+                         pushUserToDatabase(user);
                         getSupportFragmentManager().popBackStack();
                     } else {
                         signUpFragment.displayErrorMessage(getString(R.string.error_create_account));
@@ -122,7 +154,20 @@ public class StartScreenActivity extends AppCompatActivity implements
                 });
     }
 
+    private void pushUserToDatabase(User user) {
+        databaseReference.push().setValue(user);
+    }
+
     private void updateNicknameAndProfilePicture(String nickname,int pictureId) {
+        Uri uri = getPictureURI(pictureId);
+        firebaseAuth.getCurrentUser().updateProfile(new UserProfileChangeRequest.Builder()
+                .setDisplayName(nickname)
+                .setPhotoUri(uri)
+                .build());
+
+    }
+
+    private Uri getPictureURI(int pictureId) {
         Uri uri = null;
         switch (pictureId) {
             case 1: {
@@ -146,13 +191,8 @@ public class StartScreenActivity extends AppCompatActivity implements
 
 
         }
-        firebaseAuth.getCurrentUser().updateProfile(new UserProfileChangeRequest.Builder()
-                .setDisplayName(nickname)
-                .setPhotoUri(uri)
-                .build());
-
+        return uri;
     }
-
 
 
     /**
@@ -214,9 +254,9 @@ public class StartScreenActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void signUp(String email, String password, String nickname,int pictureID) {
+    public void signUp(String email, String password, String nickname,int pictureID,String interest) {
         if (isNetworkAvailable()) {
-            pushSignUpRequest(email, password, nickname,pictureID);
+            pushSignUpRequest(email, password, nickname,pictureID,interest);
         } else {
             signUpFragment.toggleLoadingBar();
         }

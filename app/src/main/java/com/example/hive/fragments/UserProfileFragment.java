@@ -41,12 +41,9 @@ public class UserProfileFragment extends Fragment {
         initializeRecyclerView(layout);
         return layout;
     }
+
     private void initializeRecyclerView(View layout) {
         ArrayList<Skill> skills =new ArrayList<>();
-        skills.add(new Skill("Learning to sing","Advanced","I am going to learfdfd"));
-        skills.add(new Skill("Learning to sing","Advanced","I am going to learfdfd"));
-        skills.add(new Skill("Learning to sing","Advanced","I am going to learfdfd"));
-        skills.add(new Skill("Learning to sing","Advanced","I am going to learfdfd"));
         recyclerView = layout.findViewById(R.id.recycler_view_profile);
         mainRecyclerAdapter = new MainRecyclerAdapter(skills);
         recyclerView.setAdapter(mainRecyclerAdapter);
