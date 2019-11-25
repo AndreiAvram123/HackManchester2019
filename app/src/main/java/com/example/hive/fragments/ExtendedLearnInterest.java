@@ -14,30 +14,30 @@ import com.example.hive.R;
 import com.example.hive.model.Skill;
 
 
-public class ExtendedSkillFragment extends Fragment {
+public class ExtendedLearnInterest extends Fragment {
    private final static String SKILL_TAG = "SKILL_TAG";
    private Skill skill;
    private TextView description;
    private TextView title;
    private TextView difficulty;
-   private ImageView backButton;
+   private TextView userName;
 
-    public ExtendedSkillFragment() {
+    public ExtendedLearnInterest() {
         // Required empty public constructor
     }
 
-   public static ExtendedSkillFragment newInstance(Skill skill){
+   public static ExtendedLearnInterest newInstance(Skill skill){
         Bundle bundle = new Bundle();
         bundle.putParcelable(SKILL_TAG,skill);
-        ExtendedSkillFragment extendedSkillFragment = new ExtendedSkillFragment();
-        extendedSkillFragment.setArguments(bundle);
-        return extendedSkillFragment;
+        ExtendedLearnInterest extendedLearnInterest = new ExtendedLearnInterest();
+        extendedLearnInterest.setArguments(bundle);
+        return extendedLearnInterest;
    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View layout = inflater.inflate(R.layout.fragment_extended_skill, container, false);
+        View layout = inflater.inflate(R.layout.fragment_extended_interest, container, false);
         skill = getArguments().getParcelable(SKILL_TAG);
         initializeUI(layout);
         return layout;
@@ -59,7 +59,8 @@ public class ExtendedSkillFragment extends Fragment {
         difficulty = layout.findViewById(R.id.extended_skill_difficulty);
         title = layout.findViewById(R.id.extended_skill_title);
         description = layout.findViewById(R.id.extended_skill_description);
-        backButton = layout.findViewById(R.id.extended_skill_back_button);
+        userName = layout.findViewById(R.id.user_name_extended);
+        ImageView backButton = layout.findViewById(R.id.extended_skill_back_button);
         backButton.setOnClickListener(view -> getFragmentManager().popBackStack());
     }
 

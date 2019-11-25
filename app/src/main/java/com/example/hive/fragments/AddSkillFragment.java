@@ -2,10 +2,6 @@ package com.example.hive.fragments;
 
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +11,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 
+import androidx.fragment.app.Fragment;
+
 import com.example.hive.R;
 import com.example.hive.model.Skill;
+import com.google.firebase.auth.FirebaseAuth;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -69,7 +68,8 @@ public class AddSkillFragment extends Fragment {
         String difficulty = difficultySpinner.getSelectedItem().toString();
         String title = titleInputField.getText().toString();
         String description = descriptionInputField.getText().toString();
-        return new Skill(title,difficulty,description);
+        String username = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+        return new Skill(title,difficulty,description,username);
     }
 
     public interface AddSkillFragmentInterface{

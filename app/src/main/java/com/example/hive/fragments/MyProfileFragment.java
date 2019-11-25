@@ -65,7 +65,7 @@ public class MyProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View layout = inflater.inflate(R.layout.fragment_my_profile_picture, container, false);
+        View layout = inflater.inflate(R.layout.fragment_my_profile, container, false);
         databaseReference = FirebaseDatabase.getInstance().getReference("users");
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -82,8 +82,8 @@ public class MyProfileFragment extends Fragment {
 
 
         addAbilityButton = layout.findViewById(R.id.add_skill_my_profile);
-        addAbilityButton.setOnClickListener(view -> myProfileAdapter.addAbility(new Skill(
-                myProfileSpinner.getSelectedItem().toString(),"",""))
+        addAbilityButton.setOnClickListener(view -> myProfileAdapter.addInterest(new Skill(
+                myProfileSpinner.getSelectedItem().toString(),"","",""))
         );
 
         Button signOutButton = layout.findViewById(R.id.sign_out_button);
@@ -121,7 +121,7 @@ public class MyProfileFragment extends Fragment {
                     Log.d("test",user + "");
                     if(user.getInterests()!=null){
                     for(Skill skill : user.getInterests()) {
-                        myProfileAdapter.addAbility(skill);
+                        myProfileAdapter.addInterest(skill);
                     }
                     }
                 }

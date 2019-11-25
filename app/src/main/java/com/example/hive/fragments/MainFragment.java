@@ -32,7 +32,6 @@ public class MainFragment extends Fragment {
     private ImageView profileImage;
     private FirebaseAuth firebaseAuth;
     private TextView userName;
-    private ArrayList<User>users;
     private static final String KEY_USERS = "KEY_USERS";
     public MainFragment() {
         // Required empty public constructor
@@ -47,11 +46,11 @@ public class MainFragment extends Fragment {
         mainFragment.setArguments(bundle);
         return mainFragment;
     }
-    public void addSkillToLearnFragment(Skill skill){
+    public void addInterestToLearnFragment(Skill skill){
        fragmentlearn.addInterest(skill);
     }
 
-    public void addSkillToTeachFragment(Skill skill) {
+    public void addInterestToTeachFragment(Skill skill) {
         teachFragment.addSkillToAdapter(skill);
     }
 

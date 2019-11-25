@@ -39,8 +39,7 @@ public class TeachFragment extends Fragment {
     }
 
 
-
-    public void addSkillToAdapter(Skill skill){
+    public void addSkillToAdapter(Skill skill) {
         mainRecyclerAdapter.addSkill(skill);
 
     }
@@ -53,7 +52,6 @@ public class TeachFragment extends Fragment {
         initializeRecyclerView(layout);
         addTeachButton = layout.findViewById(R.id.add_teach_button);
         addTeachButton.setOnClickListener(view -> teachFragmentInterface.showAddSkillFragment());
-
         return layout;
     }
 
@@ -63,11 +61,11 @@ public class TeachFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.addItemDecoration(new CustomDivider(15));
         recyclerView.setHasFixedSize(true);
+
     }
 
 
     public interface TeachFragmentInterface {
         void showAddSkillFragment();
-
     }
 }

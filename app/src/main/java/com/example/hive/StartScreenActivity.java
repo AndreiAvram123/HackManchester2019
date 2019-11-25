@@ -142,7 +142,7 @@ public class StartScreenActivity extends AppCompatActivity implements
                         firebaseAuth.getCurrentUser().sendEmailVerification();
                         updateNicknameAndProfilePicture(nickname,pictureID);
                         ArrayList<Skill> interests = new ArrayList<>();
-                        interests.add(new Skill(interest,"",""));
+                        interests.add(new Skill(interest,"","",""));
                          LatLng randomLocation  =getRandomPosition();
                          User user = new User(nickname,email,interests,new ArrayList<>(),randomLocation.latitude,
                                  randomLocation.longitude,getPictureURI(pictureID).toString());

@@ -19,18 +19,20 @@ import com.example.hive.model.Skill;
 
 public class FragmentLearn extends Fragment {
 
-    RecyclerView recyclerView;
-     MainRecyclerAdapter mainRecyclerAdapter  = new MainRecyclerAdapter();
+    private RecyclerView recyclerView;
+    private MainRecyclerAdapter mainRecyclerAdapter  = new MainRecyclerAdapter();
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
          View view = inflater.inflate(R.layout.fragment_fragment_learn,container,false);
          initializeRecyclerView(view);
-        return view;
+         return view;
     }
     public void addInterest(Skill skill){
         mainRecyclerAdapter.addSkill(skill);
     }
+
     private void initializeRecyclerView(View layout) {
         recyclerView = layout.findViewById(R.id.recyler_view_learn);
         recyclerView.setAdapter(mainRecyclerAdapter);

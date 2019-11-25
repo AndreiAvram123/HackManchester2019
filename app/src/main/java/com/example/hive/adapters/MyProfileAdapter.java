@@ -29,7 +29,7 @@ public class MyProfileAdapter extends RecyclerView.Adapter<MyProfileAdapter.View
         return new ViewHolder(view);
     }
 
-    public void addAbility(Skill ability){
+    public void addInterest(Skill ability){
         abilities.add(ability);
         notifyDataSetChanged();
     }

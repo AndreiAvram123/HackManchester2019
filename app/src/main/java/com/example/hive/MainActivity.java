@@ -15,7 +15,7 @@ import androidx.fragment.app.FragmentManager;
 import com.example.hive.adapters.MainRecyclerAdapter;
 import com.example.hive.adapters.UserProfileAdapter;
 import com.example.hive.fragments.AddSkillFragment;
-import com.example.hive.fragments.ExtendedSkillFragment;
+import com.example.hive.fragments.ExtendedLearnInterest;
 import com.example.hive.fragments.MainFragment;
 import com.example.hive.fragments.MapsFragment;
 import com.example.hive.fragments.MyProfileFragment;
@@ -76,12 +76,12 @@ public class MainActivity extends AppCompatActivity implements TeachFragment.Tea
                 if(user.getEmail().toLowerCase().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail().toLowerCase())) {
                    if(user.getSkillsToTeach()!=null) {
                        for (Skill skill : user.getSkillsToTeach()) {
-                           mainFragment.addSkillToTeachFragment(skill);
+                           mainFragment.addInterestToTeachFragment(skill);
 
                        }
                        if(user.getInterests()!=null) {
                            for (Skill skill : user.getInterests()) {
-                               mainFragment.addSkillToLearnFragment(skill);
+                               mainFragment.addInterestToLearnFragment(skill);
                            }
                        }
                    }
@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements TeachFragment.Tea
 
     @Override
     public void addSkillToTeachFragment(Skill skill) {
-       mainFragment.addSkillToTeachFragment(skill);
+       mainFragment.addInterestToTeachFragment(skill);
        addTeachSkillToDatabase(skill);
        getSupportFragmentManager().popBackStack();
     }
@@ -191,7 +191,7 @@ public class MainActivity extends AppCompatActivity implements TeachFragment.Tea
     public void extendSkill(Skill skill) {
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.container_main,ExtendedSkillFragment.newInstance(skill))
+                .replace(R.id.container_main, ExtendedLearnInterest.newInstance(skill))
                 .addToBackStack(null)
                 .commit();
     }
@@ -233,11 +233,11 @@ public class MainActivity extends AppCompatActivity implements TeachFragment.Tea
     @Override
     public void addSkillToCurrentUser(Skill skill) {
         getSupportFragmentManager().popBackStack();
-        mainFragment.addSkillToLearnFragment(skill);
-        addInterestToFirebase(skill);
+        mainFragment.addInterestToLearnFragment(skill);
+        addInterestToDatabase(skill);
     }
 
-    private void addInterestToFirebase(Skill skill) {
+    private void addInterestToDatabase(Skill skill) {
         databaseReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {

@@ -11,16 +11,18 @@ public class Skill implements Parcelable {
     private String skillDifficulty;
     private String skillDescription;
     private String skillTitle;
+    private String username;
 
     public Skill(){
 
     }
 
 
-    public Skill(String skillTitle, String skillDifficulty, String skillDescription) {
+    public Skill(String skillTitle, String skillDifficulty, String skillDescription,String username) {
         this.skillTitle = skillTitle;
         this.skillDifficulty = skillDifficulty;
         this.skillDescription = skillDescription;
+        this.username = username;
     }
 
     protected Skill(Parcel in) {
@@ -28,6 +30,7 @@ public class Skill implements Parcelable {
         skillDifficulty = in.readString();
         skillDescription = in.readString();
         skillTitle = in.readString();
+        username = in.readString();
     }
 
     public static final Creator<Skill> CREATOR = new Creator<Skill>() {
@@ -81,6 +84,7 @@ public class Skill implements Parcelable {
         dest.writeString(skillDifficulty);
         dest.writeString(skillDescription);
         dest.writeString(skillTitle);
+        dest.writeString(username);
     }
 
 }

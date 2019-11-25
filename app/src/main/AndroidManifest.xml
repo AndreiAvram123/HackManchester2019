@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.hive">
 
     <!--
@@ -17,7 +18,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
 
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -32,11 +34,18 @@
             android:value="AIzaSyCAsmBeepAaN6mb97d971_rGo6mKrEGK0s" />
 
         <activity
+            android:windowSoftInputMode="adjustPan"
             android:name=".MapsActivity"
-            android:label="@string/title_activity_maps"></activity>
+            android:label="@string/title_activity_maps">
+
+        </activity>
+
         <activity
+            android:windowSoftInputMode="adjustPan"
             android:name=".MainActivity"
-            android:label="@string/title_activity_maps"></activity>
+            android:label="@string/title_main_activity">
+
+        </activity>
         <activity android:name=".StartScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
