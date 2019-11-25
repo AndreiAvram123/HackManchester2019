@@ -40,8 +40,8 @@ public class TeachFragment extends Fragment {
 
 
     public void addSkillToAdapter(Skill skill) {
-        mainRecyclerAdapter.addSkill(skill);
 
+        mainRecyclerAdapter.addSkill(skill);
     }
 
     @Override

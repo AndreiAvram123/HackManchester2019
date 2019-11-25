@@ -4,12 +4,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -34,9 +32,7 @@ public class SignUpFragment  extends AuthenticationFragment {
     private  ImageView picture2;
     private  ImageView picture3;
     private  ImageView picture4;
-    private Spinner spinner;
     private int profilePictureSelected = 0;
-    public static final String FRAGMENT_TAG = "FRAGMENT_TAG";
 
     public static SignUpFragment newInstance() {
         return new SignUpFragment();
@@ -104,12 +100,6 @@ public class SignUpFragment  extends AuthenticationFragment {
         progressBar = layout.findViewById(R.id.loading_progress_bar_sign_up);
         errorTextView = layout.findViewById(R.id.error_message_sign_up);
         backImage = layout.findViewById(R.id.back_image_sign_up);
-
-         spinner = layout.findViewById(R.id.spinner_sign_up);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
-                R.array.interests, R.layout.spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
 
          picture1 = layout.findViewById(R.id.profile_picture1);
          picture2 = layout.findViewById(R.id.profile_picture2);
@@ -179,10 +169,9 @@ public class SignUpFragment  extends AuthenticationFragment {
         String password = passwordField.getText().toString().trim();
         String reenteredPassword = reenteredPasswordField.getText().toString().trim();
         String nickname = nicknameField.getText().toString().trim();
-        String interest =  spinner.getSelectedItem().toString();
         if (areCredentialsValid(email, password, reenteredPassword, nickname)) {
             toggleLoadingBar();
-            signUpFragmentCallback.signUp(email, password, nickname,profilePictureSelected,interest);
+            signUpFragmentCallback.signUp(email, password, nickname,profilePictureSelected);
 
         }
     }
@@ -208,7 +197,7 @@ public class SignUpFragment  extends AuthenticationFragment {
     }
 
     public interface SignUpFragmentCallback {
-        void signUp(String email, String password, String nickname,int pictureID,String interest);
+        void signUp(String email, String password, String nickname,int pictureID);
     }
 
 }

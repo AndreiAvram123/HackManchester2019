@@ -21,6 +21,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 
 public class MainFragment extends Fragment {
@@ -33,12 +34,12 @@ public class MainFragment extends Fragment {
     private FirebaseAuth firebaseAuth;
     private TextView userName;
     private static final String KEY_USERS = "KEY_USERS";
+
     public MainFragment() {
         // Required empty public constructor
     }
 
 
-    // TODO: Rename and change types and number of parameters
     public static MainFragment newInstance(ArrayList<User> users) {
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList(KEY_USERS,users);
@@ -59,7 +60,7 @@ public class MainFragment extends Fragment {
         super.onCreate(savedInstanceState);
         fragmentlearn =  new FragmentLearn();
         teachFragment = TeachFragment.newInstance();
-        mapsFragment = MapsFragment.newInstance(getArguments().getParcelableArrayList(KEY_USERS));
+        mapsFragment = MapsFragment.newInstance(Objects.requireNonNull(getArguments().getParcelableArrayList(KEY_USERS)));
         firebaseAuth = FirebaseAuth.getInstance();
 
     }
@@ -114,13 +115,13 @@ public class MainFragment extends Fragment {
             @Override
             public CharSequence getPageTitle(int position) {
                 if (position == 0) {
-                    return "Learn";
+                    return "Learning";
                 }
                 if (position == 1) {
-                    return "Teach";
+                    return "Teaching";
                 }
                 if (position == 2) {
-                    return "Map";
+                    return "Discover";
                 }
                 return super.getPageTitle(position);
             }

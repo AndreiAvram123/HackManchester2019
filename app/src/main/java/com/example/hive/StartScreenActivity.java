@@ -12,7 +12,6 @@ import androidx.fragment.app.FragmentManager;
 
 import com.example.hive.fragments.LoginFragment;
 import com.example.hive.fragments.SignUpFragment;
-import com.example.hive.model.Skill;
 import com.example.hive.model.User;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
@@ -48,6 +47,13 @@ public class StartScreenActivity extends AppCompatActivity implements
 
     private void getRandomLocations() {
         randomCoordinates = new ArrayList<>();
+        randomCoordinates.add(new LatLng(53.478033, -2.250867));
+        randomCoordinates.add(new LatLng(53.478228, -2.252476));
+        randomCoordinates.add(new LatLng(53.478902, -2.249971));
+        randomCoordinates.add(new LatLng(53.478091, -2.248823));
+        randomCoordinates.add(new LatLng(53.477794, -2.249402));
+        randomCoordinates.add(new LatLng(53.478634, -2.250955));
+        randomCoordinates.add(new LatLng(53.476120, -2.253047));
         randomCoordinates.add(new LatLng(53.478033, -2.250867));
         randomCoordinates.add(new LatLng(53.478228, -2.252476));
         randomCoordinates.add(new LatLng(53.478902, -2.249971));
@@ -135,16 +141,14 @@ public class StartScreenActivity extends AppCompatActivity implements
      * @param password
      * @param nickname
      */
-    private void pushSignUpRequest(String email, String password, String nickname,int pictureID,String interest) {
+    private void pushSignUpRequest(String email, String password, String nickname,int pictureID) {
         firebaseAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         firebaseAuth.getCurrentUser().sendEmailVerification();
-                        updateNicknameAndProfilePicture(nickname,pictureID);
-                        ArrayList<Skill> interests = new ArrayList<>();
-                        interests.add(new Skill(interest,"","",""));
+                        updateNicknameAndProfilePicture(nickname,pictureID);;
                          LatLng randomLocation  =getRandomPosition();
-                         User user = new User(nickname,email,interests,new ArrayList<>(),randomLocation.latitude,
+                         User user = new User(nickname,email,new ArrayList<>(),new ArrayList<>(),randomLocation.latitude,
                                  randomLocation.longitude,getPictureURI(pictureID).toString());
                          pushUserToDatabase(user);
                         getSupportFragmentManager().popBackStack();
@@ -169,7 +173,7 @@ public class StartScreenActivity extends AppCompatActivity implements
     }
 
     private Uri getPictureURI(int pictureId) {
-        Uri uri = null;
+        Uri uri;
         switch (pictureId) {
             case 1: {
                 uri = Uri.parse("https://firebasestorage.googleapis.com/v0/b/hive-ec30d.appspot.com/o/profile_picture1.png?alt=media&token=fc2b4ade-0564-4ab8-b1f1-e70ddd9ce7fb");
@@ -188,9 +192,7 @@ public class StartScreenActivity extends AppCompatActivity implements
                 break;
             }
             default:
-                uri = Uri.parse("https://firebasestorage.googleapis.com/v0/b/hive-ec30d.appspot.com/o/profile_picture1.png?alt=media&token=fc2b4ade-0564-4ab8-b1f1-e70ddd9ce7fb");
-
-
+                uri = Uri.parse("https://firebasestorage.googleapis.com/v0/b/hive-ec30d.appspot.com/o/profile_picture4.png?alt=media&token=af89ddd9-ab71-4f29-91ef-d24dc13ff166");
         }
         return uri;
     }
@@ -255,9 +257,9 @@ public class StartScreenActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void signUp(String email, String password, String nickname,int pictureID,String interest) {
+    public void signUp(String email, String password, String nickname,int pictureID) {
         if (isNetworkAvailable()) {
-            pushSignUpRequest(email, password, nickname,pictureID,interest);
+            pushSignUpRequest(email, password, nickname,pictureID);
         } else {
             signUpFragment.toggleLoadingBar();
         }

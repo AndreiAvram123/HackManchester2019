@@ -15,7 +15,7 @@ import androidx.fragment.app.FragmentManager;
 import com.example.hive.adapters.MainRecyclerAdapter;
 import com.example.hive.adapters.UserProfileAdapter;
 import com.example.hive.fragments.AddSkillFragment;
-import com.example.hive.fragments.ExtendedLearnInterest;
+import com.example.hive.fragments.ExtendedInterest;
 import com.example.hive.fragments.MainFragment;
 import com.example.hive.fragments.MapsFragment;
 import com.example.hive.fragments.MyProfileFragment;
@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements TeachFragment.Tea
         mainFragment = MainFragment.newInstance(users);
         fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
-                .replace(R.id.container_main,mainFragment)
+                .replace(R.id.container_main, mainFragment)
                 .addToBackStack(null)
                 .commit();
 
@@ -73,18 +73,18 @@ public class MainActivity extends AppCompatActivity implements TeachFragment.Tea
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 User user = dataSnapshot.getValue(User.class);
                 users.add(user);
-                if(user.getEmail().toLowerCase().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail().toLowerCase())) {
-                   if(user.getSkillsToTeach()!=null) {
-                       for (Skill skill : user.getSkillsToTeach()) {
-                           mainFragment.addInterestToTeachFragment(skill);
+                if (user.getEmail().toLowerCase().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail().toLowerCase())) {
+                    if (user.getSkillsToTeach() != null) {
+                        for (Skill skill : user.getSkillsToTeach()) {
+                            mainFragment.addInterestToTeachFragment(skill);
 
-                       }
-                       if(user.getInterests()!=null) {
-                           for (Skill skill : user.getInterests()) {
-                               mainFragment.addInterestToLearnFragment(skill);
-                           }
-                       }
-                   }
+                        }
+                        if (user.getInterests() != null) {
+                            for (Skill skill : user.getInterests()) {
+                                mainFragment.addInterestToLearnFragment(skill);
+                            }
+                        }
+                    }
                 }
 
             }
@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements TeachFragment.Tea
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     CODE_FINE_LOCATION);
 
-        }else{
+        } else {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED) {
                 //request fine location permission
@@ -135,7 +135,7 @@ public class MainActivity extends AppCompatActivity implements TeachFragment.Tea
     @Override
     public void showAddSkillFragment() {
         fragmentManager.beginTransaction()
-                .replace(R.id.container_main,new AddSkillFragment())
+                .replace(R.id.container_main, new AddSkillFragment())
                 .addToBackStack(null)
                 .commit();
     }
@@ -148,20 +148,19 @@ public class MainActivity extends AppCompatActivity implements TeachFragment.Tea
 
     @Override
     public void addSkillToTeachFragment(Skill skill) {
-       mainFragment.addInterestToTeachFragment(skill);
-       addTeachSkillToDatabase(skill);
-       getSupportFragmentManager().popBackStack();
+        mainFragment.addInterestToTeachFragment(skill);
+        addTeachSkillToDatabase(skill);
+        getSupportFragmentManager().popBackStack();
     }
 
-    private void addTeachSkillToDatabase(Skill skill){
+    private void addTeachSkillToDatabase(Skill skill) {
         databaseReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 User user = dataSnapshot.getValue(User.class);
                 user.addSkillToTeach(skill);
-                if(user.getEmail().toLowerCase().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail().toLowerCase()))
-                {
-                  dataSnapshot.getRef().child("skillsToTeach").setValue(user.getSkillsToTeach());
+                if (user.getEmail().toLowerCase().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail().toLowerCase())) {
+                    dataSnapshot.getRef().child("skillsToTeach").setValue(user.getSkillsToTeach());
                 }
             }
 
@@ -191,7 +190,7 @@ public class MainActivity extends AppCompatActivity implements TeachFragment.Tea
     public void extendSkill(Skill skill) {
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.container_main, ExtendedLearnInterest.newInstance(skill))
+                .replace(R.id.container_main, ExtendedInterest.newInstance(skill))
                 .addToBackStack(null)
                 .commit();
     }
@@ -199,16 +198,18 @@ public class MainActivity extends AppCompatActivity implements TeachFragment.Tea
     @Override
     public void openUserProfile(LatLng location) {
         User user = getUserProfile(location);
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.container_main, UserProfileFragment.newInstance(user))
-                .addToBackStack(null)
-                .commit();
+        if(user!=null) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.container_main, UserProfileFragment.newInstance(user))
+                    .addToBackStack(null)
+                    .commit();
+        }
     }
 
     private User getUserProfile(LatLng location) {
-        for(User user :users){
-            if(user.getLatitude() == location.latitude && user.getLongitute() == location.longitude){
+        for (User user : users) {
+            if (user.getLatitude() == location.latitude && user.getLongitute() == location.longitude) {
                 return user;
             }
         }
@@ -216,17 +217,9 @@ public class MainActivity extends AppCompatActivity implements TeachFragment.Tea
     }
 
     @Override
-    public void showMainFragment() {
-        fragmentManager.beginTransaction()
-                .replace(R.id.container_main,mainFragment)
-                .addToBackStack(null)
-                .commit();
-    }
-
-    @Override
     public void signOutCurrentUser() {
         firebaseAuth.signOut();
-        startActivity(new Intent(this,StartScreenActivity.class));
+        startActivity(new Intent(this, StartScreenActivity.class));
         finish();
     }
 
@@ -243,8 +236,7 @@ public class MainActivity extends AppCompatActivity implements TeachFragment.Tea
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 User user = dataSnapshot.getValue(User.class);
                 user.addInterest(skill);
-                if(user.getEmail().toLowerCase().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail().toLowerCase()))
-                {
+                if (user.getEmail().toLowerCase().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail().toLowerCase())) {
                     dataSnapshot.getRef().child("interests").setValue(user.getSkillsToTeach());
                 }
             }

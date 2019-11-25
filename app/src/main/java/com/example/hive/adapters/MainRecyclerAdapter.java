@@ -20,9 +20,6 @@ public class MainRecyclerAdapter extends  RecyclerView.Adapter<MainRecyclerAdapt
     public MainRecyclerAdapter(){
 
     }
-    public MainRecyclerAdapter(ArrayList<Skill> skills){
-        this.skills = skills;
-    }
 
     public void addSkill(Skill skill){
         skills.add(skill);
@@ -41,7 +38,11 @@ public class MainRecyclerAdapter extends  RecyclerView.Adapter<MainRecyclerAdapt
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.title.setText( skills.get(position).getSkillTitle());
         holder.difficulty.setText(skills.get(position).getSkillDifficulty());
+        if(!skills.get(position).getUsername().isEmpty()){
+            holder.username.setText(skills.get(position).getUsername());
+        }
         holder.layout.setOnClickListener(view -> mainRecyclerAdapterInterface.extendSkill(skills.get(position)));
+
     }
 
 
@@ -53,12 +54,17 @@ public class MainRecyclerAdapter extends  RecyclerView.Adapter<MainRecyclerAdapt
     class ViewHolder extends RecyclerView.ViewHolder{
       TextView difficulty;
       TextView title;
+      TextView username;
+
       View layout;
+
         public ViewHolder(@NonNull View itemView) {
              super(itemView);
              layout = itemView;
              difficulty = itemView.findViewById(R.id.difficulty_value_user_profile);
              title = itemView.findViewById(R.id.skill_title_user_profile);
+             username = itemView.findViewById(R.id.username_item_list);
+
         }
     }
     public interface MainRecyclerAdapterInterface{

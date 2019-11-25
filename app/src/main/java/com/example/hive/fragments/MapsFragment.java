@@ -35,9 +35,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
-    MapView mapView;
-    GoogleMap map;
-    View customMarker;
+    private MapView mapView;
+    private GoogleMap map;
+    private View customMarker;
     private MapsFragmentInterface mapsFragmentInterface;
     private static final String KEY_USERS = "KEY_USERS";
     private ArrayList<User>users;

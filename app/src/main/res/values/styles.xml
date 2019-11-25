@@ -7,5 +7,8 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">#ffae42</item>
     </style>
-
+   <style name="textHeading">
+       <item name="android:textSize">20sp</item>
+       <item name="android:textColor">@color/textColor</item>
+   </style>
 </resources>

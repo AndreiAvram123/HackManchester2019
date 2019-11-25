@@ -72,7 +72,7 @@
             android:id="@+id/profile_picture4"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
             android:src="@drawable/profile_picture4"
             app:layout_constraintEnd_toEndOf="parent"
@@ -84,7 +84,7 @@
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
             android:src="@drawable/profile_picture3"
             app:layout_constraintEnd_toStartOf="@+id/profile_picture4"
@@ -96,7 +96,7 @@
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             android:src="@drawable/profile_picture2"
             app:layout_constraintStart_toEndOf="@+id/profile_picture1"
             app:layout_constraintTop_toBottomOf="@+id/textView9" />
@@ -239,6 +239,7 @@
 
 
         <EditText
+            style="@style/textHeading"
             android:id="@+id/email_field_sign_up"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -252,55 +253,29 @@
             android:nextFocusLeft="@id/email_field_sign_up"
             android:nextFocusUp="@id/email_field_sign_up"
             android:selectAllOnFocus="false"
-            android:textColor="@color/textColor"
-            android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/hint_enter_email" />
 
         <TextView
-
-            android:id="@+id/textView8"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:text="INTERESTS"
-            android:textColor="@color/textColor"
-
-            app:layout_constraintBottom_toBottomOf="@+id/spinner_sign_up"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/error_message_sign_up" />
-
-        <Spinner
-            android:id="@+id/spinner_sign_up"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="24dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/textView8"
-            app:layout_constraintTop_toBottomOf="@+id/error_message_sign_up" />
-
-        <TextView
+            style="@style/textHeading"
             android:id="@+id/textView9"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:text="Choose a profile picture"
-            android:textColor="@color/textColor"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView8" />
+            app:layout_constraintTop_toBottomOf="@+id/error_message_sign_up" />
 
         <ImageView
             android:id="@+id/profile_picture1"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_marginStart="18dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             android:src="@drawable/profile_picture1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView9" />

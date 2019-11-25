@@ -19,7 +19,6 @@ import com.example.hive.model.Skill;
 
 public class FragmentLearn extends Fragment {
 
-    private RecyclerView recyclerView;
     private MainRecyclerAdapter mainRecyclerAdapter  = new MainRecyclerAdapter();
 
     @Nullable
@@ -34,7 +33,7 @@ public class FragmentLearn extends Fragment {
     }
 
     private void initializeRecyclerView(View layout) {
-        recyclerView = layout.findViewById(R.id.recyler_view_learn);
+        RecyclerView recyclerView = layout.findViewById(R.id.recyler_view_learn);
         recyclerView.setAdapter(mainRecyclerAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.addItemDecoration(new CustomDivider(15));

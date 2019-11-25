@@ -35,13 +35,6 @@
 
         <activity
             android:windowSoftInputMode="adjustPan"
-            android:name=".MapsActivity"
-            android:label="@string/title_activity_maps">
-
-        </activity>
-
-        <activity
-            android:windowSoftInputMode="adjustPan"
             android:name=".MainActivity"
             android:label="@string/title_main_activity">
 

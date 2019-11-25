@@ -13,12 +13,12 @@ public class Skill implements Parcelable {
     private String skillTitle;
     private String username;
 
-    public Skill(){
+    public Skill() {
 
     }
 
 
-    public Skill(String skillTitle, String skillDifficulty, String skillDescription,String username) {
+    public Skill(String skillTitle, String skillDifficulty, String skillDescription, String username) {
         this.skillTitle = skillTitle;
         this.skillDifficulty = skillDifficulty;
         this.skillDescription = skillDescription;
@@ -53,24 +53,32 @@ public class Skill implements Parcelable {
         return this.skillDifficulty;
     }
 
-    public void setSkillDifficulty(String skillDifficulty) {
-        this.skillDifficulty = skillDifficulty;
-    }
-
     public String getSkillDescription() {
         return this.skillDescription;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setSkillId(int skillId) {
+        this.skillId = skillId;
+    }
+
+    public void setSkillDifficulty(String skillDifficulty) {
+        this.skillDifficulty = skillDifficulty;
     }
 
     public void setSkillDescription(String skillDescription) {
         this.skillDescription = skillDescription;
     }
 
-    public int getSkillId() {
-        return this.skillId;
+    public void setSkillTitle(String skillTitle) {
+        this.skillTitle = skillTitle;
     }
 
-    public void setSkillId(int skillId) {
-        this.skillId = skillId;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     @Override
