@@ -6,23 +6,23 @@ import android.os.Parcelable;
 import com.google.firebase.database.IgnoreExtraProperties;
 
 @IgnoreExtraProperties
+
 public class Skill implements Parcelable {
     private int skillId;
     private String skillDifficulty;
     private String skillDescription;
     private String skillTitle;
-    private String username;
+    private CustomUser user;
 
-    public Skill() {
+    public Skill(){
 
     }
 
-
-    public Skill(String skillTitle, String skillDifficulty, String skillDescription, String username) {
+    public Skill(String skillTitle, String skillDifficulty, String skillDescription,CustomUser user) {
         this.skillTitle = skillTitle;
         this.skillDifficulty = skillDifficulty;
         this.skillDescription = skillDescription;
-        this.username = username;
+        this.user = user;
     }
 
     protected Skill(Parcel in) {
@@ -30,7 +30,7 @@ public class Skill implements Parcelable {
         skillDifficulty = in.readString();
         skillDescription = in.readString();
         skillTitle = in.readString();
-        username = in.readString();
+        user = in.readParcelable(CustomUser.class.getClassLoader());
     }
 
     public static final Creator<Skill> CREATOR = new Creator<Skill>() {
@@ -45,42 +45,6 @@ public class Skill implements Parcelable {
         }
     };
 
-    public String getSkillTitle() {
-        return skillTitle;
-    }
-
-    public String getSkillDifficulty() {
-        return this.skillDifficulty;
-    }
-
-    public String getSkillDescription() {
-        return this.skillDescription;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setSkillId(int skillId) {
-        this.skillId = skillId;
-    }
-
-    public void setSkillDifficulty(String skillDifficulty) {
-        this.skillDifficulty = skillDifficulty;
-    }
-
-    public void setSkillDescription(String skillDescription) {
-        this.skillDescription = skillDescription;
-    }
-
-    public void setSkillTitle(String skillTitle) {
-        this.skillTitle = skillTitle;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     @Override
     public int describeContents() {
         return 0;
@@ -92,7 +56,39 @@ public class Skill implements Parcelable {
         dest.writeString(skillDifficulty);
         dest.writeString(skillDescription);
         dest.writeString(skillTitle);
-        dest.writeString(username);
+        dest.writeParcelable(user,flags);
+
     }
 
+    public String getSkillDifficulty() {
+        return skillDifficulty;
+    }
+
+    public void setSkillDifficulty(String skillDifficulty) {
+        this.skillDifficulty = skillDifficulty;
+    }
+
+    public String getSkillDescription() {
+        return skillDescription;
+    }
+
+    public void setSkillDescription(String skillDescription) {
+        this.skillDescription = skillDescription;
+    }
+
+    public String getSkillTitle() {
+        return skillTitle;
+    }
+
+    public void setSkillTitle(String skillTitle) {
+        this.skillTitle = skillTitle;
+    }
+
+    public CustomUser getUser() {
+        return user;
+    }
+
+    public void setUser(CustomUser user) {
+        this.user = user;
+    }
 }

@@ -72,7 +72,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text=" is a short description of is a short description of the jobThis is a short description of the jobThis is a short description of the jobThis is a short description of the jobThis is a short description of the jobThis is a short description of the jobThis is a short description of the jobThis is a short description of the jobThis is a short description of the jobThis is a short description of the jobThis is a short description of the jobThis is a short description of the jobThis is a short description of the jobThis is a short description of the jobThis is a short description of the jobThis is a short description of the jobThis is a short description of the job"
+                tools:text="cription of the jobThis is a short description of the jobThis is a short description of the jobThis is a short description of the jobThis is a short description of the jobThis is a short description of the jobThis is a short description of the jobThis is a short description of the jobThis is a short description of the jobThis is a short description of the jobThis is a short description of the jobThis is a short description of the jobThis is a short description of the jobThis is a short description of the job"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -101,4 +101,14 @@
         tools:text= "Andrei Avram"
         app:layout_constraintStart_toEndOf="@+id/textView"
         app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+
+    <Button
+        android:id="@+id/contact_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="Contact"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

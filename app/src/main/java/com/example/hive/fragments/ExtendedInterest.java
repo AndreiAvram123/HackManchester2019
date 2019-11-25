@@ -1,12 +1,17 @@
 package com.example.hive.fragments;
 
 
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
@@ -53,7 +58,7 @@ public class ExtendedInterest extends Fragment {
         difficulty.setText(skill.getSkillDifficulty());
         description.setText(skill.getSkillDescription());
         title.setText(skill.getSkillTitle());
-        username.setText(skill.getUsername());
+        username.setText(skill.getUser().getUsername());
     }
 
     private void findViews(View layout) {
@@ -63,6 +68,17 @@ public class ExtendedInterest extends Fragment {
         username = layout.findViewById(R.id.user_name_extended);
         ImageView backButton = layout.findViewById(R.id.extended_skill_back_button);
         backButton.setOnClickListener(view -> getFragmentManager().popBackStack());
+        Button contactButton = layout.findViewById(R.id.contact_button);
+        contactButton.setOnClickListener(view -> contactUser());
+    }
+    private void contactUser(){
+        Intent email = new Intent(android.content.Intent.ACTION_SENDTO);
+        email.setData(Uri.parse("mailto:"+skill.getUser().getEmail()));
+        try {
+            startActivity(email);
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(getContext(), "No email service available...", Toast.LENGTH_SHORT).show();
+        }
     }
 
 }

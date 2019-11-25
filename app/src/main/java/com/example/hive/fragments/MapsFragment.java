@@ -1,20 +1,20 @@
 package com.example.hive.fragments;
 
 
-import android.app.Activity;
-import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.example.hive.R;
 import com.example.hive.model.User;
 import com.google.android.gms.maps.CameraUpdate;
@@ -26,7 +26,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -40,11 +39,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     private View customMarker;
     private MapsFragmentInterface mapsFragmentInterface;
     private static final String KEY_USERS = "KEY_USERS";
-    private ArrayList<User>users;
+    private ArrayList<User> users;
 
-    public static MapsFragment newInstance(@NonNull ArrayList<User> users){
+    public static MapsFragment newInstance(@NonNull ArrayList<User> users) {
         Bundle bundle = new Bundle();
-        bundle.putParcelableArrayList(KEY_USERS,users);
+        bundle.putParcelableArrayList(KEY_USERS, users);
         MapsFragment mapsFragment = new MapsFragment();
         mapsFragment.setArguments(bundle);
         return mapsFragment;
@@ -53,10 +52,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_maps, container, false);
-         users = getArguments().getParcelableArrayList(KEY_USERS);
+        users = getArguments().getParcelableArrayList(KEY_USERS);
 
         mapsFragmentInterface = (MapsFragmentInterface) getActivity();
-         customMarker = inflater.inflate(R.layout.custom_marker,null);
+        customMarker = inflater.inflate(R.layout.custom_marker, null);
         CircleImageView markerImage = customMarker.findViewById(R.id.user_dp);
         // Gets the MapView from the XML layout and creates it
         mapView = (MapView) v.findViewById(R.id.mapView);
@@ -68,53 +67,44 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         return v;
     }
 
-    public static Bitmap createCustomMarker(Context context,  String resource, String _name) {
-
-        View marker = ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.custom_marker, null);
-
-        CircleImageView markerImage = marker.findViewById(R.id.user_dp);
-
-        Picasso.get().load(resource)
-                .into(markerImage);
-
-        TextView txt_name = marker.findViewById(R.id.name);
-        txt_name.setText(_name);
-
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        marker.setLayoutParams(new ViewGroup.LayoutParams(52, ViewGroup.LayoutParams.WRAP_CONTENT));
-        marker.measure(displayMetrics.widthPixels, displayMetrics.heightPixels);
-        marker.layout(0, 0, displayMetrics.widthPixels, displayMetrics.heightPixels);
-        marker.buildDrawingCache();
-        Bitmap bitmap = Bitmap.createBitmap(marker.getMeasuredWidth(), marker.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        marker.draw(canvas);
-
-        return bitmap;
-    }
-
     @Override
     public void onMapReady(GoogleMap googleMap) {
         googleMap.setOnMarkerClickListener(this);
         map = googleMap;
-        googleMap.setMyLocationEnabled(true);
+        //googleMap.setMyLocationEnabled(true);
         addMarkers();
+
         LatLng latLng = new LatLng(53.47723, -2.25487);
         CameraUpdate location = CameraUpdateFactory.newLatLngZoom(
-                latLng,15);
+                latLng, 15);
         map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         map.animateCamera(location);
-
-
 
     }
 
     private void addMarkers() {
-        for(User user :users){
-            LatLng latLng = new LatLng(user.getLatitude(),user.getLongitute());
-            map.addMarker(new MarkerOptions().position(latLng)
-            ).setIcon(BitmapDescriptorFactory.fromBitmap(
-                    createCustomMarker(getContext(),user.getPictureUri(),user.getUsername())));
+        for (User user : users) {
+            LatLng latLng = new LatLng(user.getLatitude(), user.getLongitute());
+            Glide.with(getContext())
+                    .asBitmap()
+                    .load(user.getPictureUri())
+                    .into(new CustomTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                            Bitmap resizedBitmap = Bitmap.createScaledBitmap(resource, 100,
+                                    100, true);
+                            map.addMarker(new MarkerOptions().position(latLng)).setIcon(
+                                    BitmapDescriptorFactory.fromBitmap(
+                                            resizedBitmap));
+                        }
+
+                        @Override
+                        public void onLoadCleared(@Nullable Drawable placeholder) {
+
+                        }
+                    });
+
+
         }
     }
 
@@ -148,7 +138,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         mapsFragmentInterface.openUserProfile(marker.getPosition());
         return false;
     }
-    public interface MapsFragmentInterface{
+
+    public interface MapsFragmentInterface {
         void openUserProfile(LatLng location);
     }
 }

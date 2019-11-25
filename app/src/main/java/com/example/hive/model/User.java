@@ -9,20 +9,24 @@ import java.util.ArrayList;
 
 @IgnoreExtraProperties
 public class User implements Parcelable {
+
   private String username;
   private String email;
-  private ArrayList<Skill> interests;
+  private ArrayList<Skill> currentLearningSkills;
   private ArrayList<Skill> skillsToTeach;
   private double latitude;
   private double longitute;
   private String pictureUri;
 
+  public User(){
 
-  public User(String username, String email, ArrayList<Skill> interests, ArrayList<Skill> skillsToTeach,
-              double latitude, double longitude,String pictureUri) {
+  }
+
+  public User(String username, String email, ArrayList<Skill> currentLearningSkills, ArrayList<Skill> skillsToTeach,
+              double latitude, double longitude, String pictureUri) {
     this.username = username;
     this.email = email;
-    this.interests = interests;
+    this.currentLearningSkills = currentLearningSkills;
     this.skillsToTeach = skillsToTeach;
     this.longitute = longitude;
     this.latitude = latitude;
@@ -33,7 +37,7 @@ public class User implements Parcelable {
   protected User(Parcel in) {
     username = in.readString();
     email = in.readString();
-    interests = in.createTypedArrayList(Skill.CREATOR);
+    currentLearningSkills = in.createTypedArrayList(Skill.CREATOR);
     skillsToTeach = in.createTypedArrayList(Skill.CREATOR);
     latitude = in.readDouble();
     longitute = in.readDouble();
@@ -60,39 +64,27 @@ public class User implements Parcelable {
 
 }
   public void addInterest(Skill skill){
-    if(interests==null) {
-      interests = new ArrayList<>();
+    if(currentLearningSkills ==null) {
+      currentLearningSkills = new ArrayList<>();
     }
-    interests.add(skill);
+    currentLearningSkills.add(skill);
 
   }
 
-  public User(){
-    //required
+  @Override
+  public int describeContents() {
+    return 0;
   }
 
-  public String getPictureUri() {
-    return pictureUri;
-  }
-
-  public void setPictureUri(String pictureUri) {
-    this.pictureUri = pictureUri;
-  }
-
-  public double getLatitude() {
-    return latitude;
-  }
-
-  public void setLatitude(double latitude) {
-    this.latitude = latitude;
-  }
-
-  public double getLongitute() {
-    return longitute;
-  }
-
-  public void setLongitute(double longitute) {
-    this.longitute = longitute;
+  @Override
+  public void writeToParcel(Parcel dest, int flags) {
+    dest.writeString(username);
+    dest.writeString(email);
+    dest.writeTypedList(currentLearningSkills);
+    dest.writeTypedList(skillsToTeach);
+    dest.writeDouble(latitude);
+    dest.writeDouble(longitute);
+    dest.writeString(pictureUri);
   }
 
   public String getUsername() {
@@ -111,12 +103,12 @@ public class User implements Parcelable {
     this.email = email;
   }
 
-  public ArrayList<Skill> getInterests() {
-    return interests;
+  public ArrayList<Skill> getCurrentLearningSkills() {
+    return currentLearningSkills;
   }
 
-  public void setInterests(ArrayList<Skill> interests) {
-    this.interests = interests;
+  public void setCurrentLearningSkills(ArrayList<Skill> currentLearningSkills) {
+    this.currentLearningSkills = currentLearningSkills;
   }
 
   public ArrayList<Skill> getSkillsToTeach() {
@@ -127,20 +119,27 @@ public class User implements Parcelable {
     this.skillsToTeach = skillsToTeach;
   }
 
-  @Override
-  public int describeContents() {
-    return 0;
+  public double getLatitude() {
+    return latitude;
   }
 
-  @Override
-  public void writeToParcel(Parcel dest, int flags) {
+  public void setLatitude(double latitude) {
+    this.latitude = latitude;
+  }
 
-    dest.writeString(username);
-    dest.writeString(email);
-    dest.writeTypedList(interests);
-    dest.writeTypedList(skillsToTeach);
-    dest.writeDouble(latitude);
-    dest.writeDouble(longitute);
-    dest.writeString(pictureUri);
+  public double getLongitute() {
+    return longitute;
+  }
+
+  public void setLongitute(double longitute) {
+    this.longitute = longitute;
+  }
+
+  public String getPictureUri() {
+    return pictureUri;
+  }
+
+  public void setPictureUri(String pictureUri) {
+    this.pictureUri = pictureUri;
   }
 }

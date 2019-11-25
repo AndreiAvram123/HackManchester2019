@@ -12,20 +12,33 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.hive.R;
-import com.example.hive.adapters.MainRecyclerAdapter;
+import com.example.hive.adapters.AdapterLearn;
 import com.example.hive.model.CustomDivider;
 import com.example.hive.model.Skill;
+
+import java.util.ArrayList;
 
 
 public class FragmentLearn extends Fragment {
 
-    private MainRecyclerAdapter mainRecyclerAdapter  = new MainRecyclerAdapter();
+    private AdapterLearn mainRecyclerAdapter  = new AdapterLearn();
+    private static final String KEY_SKILLS_TO_LEARN = "KEY_SKILLS_TO_LEARN";
+
+    public static FragmentLearn newInstance(@NonNull ArrayList<Skill> skillsToLearn){
+        FragmentLearn fragmentLearn = new FragmentLearn();
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList(KEY_SKILLS_TO_LEARN,skillsToLearn);
+        fragmentLearn.setArguments(bundle);
+        return fragmentLearn;
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
          View view = inflater.inflate(R.layout.fragment_fragment_learn,container,false);
          initializeRecyclerView(view);
+        ArrayList<Skill> skillsToTeach = getArguments().getParcelableArrayList(KEY_SKILLS_TO_LEARN);
+        mainRecyclerAdapter.addSkills(skillsToTeach);
          return view;
     }
     public void addInterest(Skill skill){

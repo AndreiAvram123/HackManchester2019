@@ -14,8 +14,10 @@ import android.widget.Spinner;
 import androidx.fragment.app.Fragment;
 
 import com.example.hive.R;
+import com.example.hive.model.CustomUser;
 import com.example.hive.model.Skill;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -29,6 +31,7 @@ public class AddSkillFragment extends Fragment {
    private EditText descriptionInputField;
 
    private AddSkillFragmentInterface addSkillFragmentInterface;
+
     public AddSkillFragment() {
         // Required empty public constructor
     }
@@ -49,14 +52,12 @@ public class AddSkillFragment extends Fragment {
 
         finishAddSkillButton = layout.findViewById(R.id.finish_add_skill_button);
         finishAddSkillButton.setOnClickListener(view ->{
-            addSkillFragmentInterface.addSkillToTeachFragment(getSkillFromFields());
+            addSkillFragmentInterface.addSkillToTeachFragment(createInterestFromFields());
 
         });
         difficultySpinner = layout.findViewById(R.id.difficulty_spinner);
 
 
-        //todo
-        //good to remember
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
                 R.array.difficulty_levels, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -64,12 +65,13 @@ public class AddSkillFragment extends Fragment {
         return layout;
     }
 
-    private Skill getSkillFromFields() {
+    private Skill createInterestFromFields() {
         String difficulty = difficultySpinner.getSelectedItem().toString();
         String title = titleInputField.getText().toString();
         String description = descriptionInputField.getText().toString();
-        String username = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
-        return new Skill(title,difficulty,description,username);
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        CustomUser customUser = new CustomUser(currentUser.getDisplayName(),currentUser.getEmail(),currentUser.getPhotoUrl().toString());
+        return new Skill(title,difficulty,description,customUser);
     }
 
     public interface AddSkillFragmentInterface{

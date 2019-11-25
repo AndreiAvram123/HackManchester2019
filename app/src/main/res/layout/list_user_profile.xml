@@ -14,7 +14,7 @@ app:cardElevation="10dp"
     >
 
     <TextView
-        android:id="@+id/skill_title_user_profile"
+        android:id="@+id/skill_title_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -22,11 +22,11 @@ app:cardElevation="10dp"
         android:textColor="@color/textColor"
         android:textSize="20sp"
         app:layout_constraintEnd_toStartOf="@+id/add_skill_user_profile"
-        app:layout_constraintStart_toEndOf="@+id/imageView"
+        app:layout_constraintStart_toEndOf="@+id/user_picture_list"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/user_picture_list"
         android:layout_width="60dp"
         android:layout_height="50dp"
         android:layout_marginStart="16dp"
@@ -38,7 +38,7 @@ app:cardElevation="10dp"
         app:srcCompat="@drawable/logo" />
 
     <TextView
-        android:id="@+id/difficulty_value_user_profile"
+        android:id="@+id/difficulty_value_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -48,8 +48,8 @@ app:cardElevation="10dp"
         android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/add_skill_user_profile"
-        app:layout_constraintStart_toEndOf="@+id/imageView"
-        app:layout_constraintTop_toBottomOf="@+id/skill_title_user_profile" />
+        app:layout_constraintStart_toEndOf="@+id/user_picture_list"
+        app:layout_constraintTop_toBottomOf="@+id/skill_title_list" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add_skill_user_profile"

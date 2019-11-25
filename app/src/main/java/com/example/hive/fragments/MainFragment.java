@@ -34,15 +34,20 @@ public class MainFragment extends Fragment {
     private FirebaseAuth firebaseAuth;
     private TextView userName;
     private static final String KEY_USERS = "KEY_USERS";
+    private static final String KEY_SKILLS_TO_LEARN = "KEY_SKILLS_TO_LEARN";
+    private static final String KEY_SKILLS_TO_TEACH = "KEY_SKILLS_TO_TEACH";
 
     public MainFragment() {
         // Required empty public constructor
     }
 
 
-    public static MainFragment newInstance(ArrayList<User> users) {
+    public static MainFragment newInstance(ArrayList<User> users,ArrayList<Skill> skillsToLearn,ArrayList<Skill> skillsToTeach) {
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList(KEY_USERS,users);
+        bundle.putParcelableArrayList(KEY_SKILLS_TO_LEARN,skillsToLearn);
+        bundle.putParcelableArrayList(KEY_SKILLS_TO_TEACH,skillsToTeach);
+
         MainFragment mainFragment = new MainFragment();
         mainFragment.setArguments(bundle);
         return mainFragment;
@@ -58,9 +63,11 @@ public class MainFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        fragmentlearn =  new FragmentLearn();
-        teachFragment = TeachFragment.newInstance();
-        mapsFragment = MapsFragment.newInstance(Objects.requireNonNull(getArguments().getParcelableArrayList(KEY_USERS)));
+        if (getArguments() != null) {
+            mapsFragment = MapsFragment.newInstance(Objects.requireNonNull(getArguments().getParcelableArrayList(KEY_USERS)));
+            teachFragment = TeachFragment.newInstance(Objects.requireNonNull(getArguments().getParcelableArrayList(KEY_SKILLS_TO_TEACH)));
+            fragmentlearn = FragmentLearn.newInstance(Objects.requireNonNull(getArguments().getParcelableArrayList(KEY_SKILLS_TO_LEARN)));
+        }
         firebaseAuth = FirebaseAuth.getInstance();
 
     }

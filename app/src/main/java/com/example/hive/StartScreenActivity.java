@@ -146,7 +146,7 @@ public class StartScreenActivity extends AppCompatActivity implements
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         firebaseAuth.getCurrentUser().sendEmailVerification();
-                        updateNicknameAndProfilePicture(nickname,pictureID);;
+                        updateNicknameAndProfilePicture(nickname,pictureID);
                          LatLng randomLocation  =getRandomPosition();
                          User user = new User(nickname,email,new ArrayList<>(),new ArrayList<>(),randomLocation.latitude,
                                  randomLocation.longitude,getPictureURI(pictureID).toString());

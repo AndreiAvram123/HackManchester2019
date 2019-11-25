@@ -6,41 +6,38 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.hive.R;
-import com.example.hive.adapters.MainRecyclerAdapter;
+import com.example.hive.adapters.AdapterTeach;
 import com.example.hive.model.CustomDivider;
 import com.example.hive.model.Skill;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-/**
- * A simple {@link Fragment} subclass.
- */
+import java.util.ArrayList;
+
 public class TeachFragment extends Fragment {
 
 
     private TeachFragmentInterface teachFragmentInterface;
     private FloatingActionButton addTeachButton;
     private RecyclerView recyclerView;
-    private MainRecyclerAdapter mainRecyclerAdapter = new MainRecyclerAdapter();
+    private AdapterTeach mainRecyclerAdapter = new AdapterTeach();
+    private static final String KEY_SKILLS_TO_TEACH = "KEY_SKILLS_TO_TEACH";
 
-    public TeachFragment() {
-        // Required empty public constructor
-    }
-
-    // TODO: Rename and change types and number of parameters
-    public static TeachFragment newInstance() {
+    public static TeachFragment newInstance(@NonNull ArrayList<Skill> skillsToTeach) {
         TeachFragment teachFragment = new TeachFragment();
-
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList(KEY_SKILLS_TO_TEACH,skillsToTeach);
+        teachFragment.setArguments(bundle);
         return teachFragment;
     }
 
 
     public void addSkillToAdapter(Skill skill) {
-
         mainRecyclerAdapter.addSkill(skill);
     }
 
@@ -50,6 +47,10 @@ public class TeachFragment extends Fragment {
         View layout = inflater.inflate(R.layout.fragment_teach, container, false);
         teachFragmentInterface = (TeachFragmentInterface) getActivity();
         initializeRecyclerView(layout);
+
+        ArrayList<Skill> skillsToTeach = getArguments().getParcelableArrayList(KEY_SKILLS_TO_TEACH);
+        mainRecyclerAdapter.addSkills(skillsToTeach);
+
         addTeachButton = layout.findViewById(R.id.add_teach_button);
         addTeachButton.setOnClickListener(view -> teachFragmentInterface.showAddSkillFragment());
         return layout;

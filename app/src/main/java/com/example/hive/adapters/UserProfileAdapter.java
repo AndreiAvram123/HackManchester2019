@@ -56,8 +56,8 @@ public class UserProfileAdapter extends RecyclerView.Adapter<UserProfileAdapter.
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            title  = itemView.findViewById(R.id.skill_title_user_profile);
-            difficulty = itemView.findViewById(R.id.difficulty_value_user_profile);
+            title  = itemView.findViewById(R.id.skill_title_list);
+            difficulty = itemView.findViewById(R.id.difficulty_value_list);
             addSkillButton = itemView.findViewById(R.id.add_skill_user_profile);
         }
     }

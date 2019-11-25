@@ -20,9 +20,6 @@ import com.example.hive.model.User;
 
 import java.util.ArrayList;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class UserProfileFragment extends Fragment {
 
     private RecyclerView recyclerView;

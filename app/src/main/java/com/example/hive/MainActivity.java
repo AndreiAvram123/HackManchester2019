@@ -45,16 +45,24 @@ public class MainActivity extends AppCompatActivity implements TeachFragment.Tea
     private FirebaseAuth firebaseAuth;
     private DatabaseReference databaseReference;
     private ArrayList<User> users;
+    private ArrayList<Skill> skillsToLearn;
+    private ArrayList<Skill> skillsToTeach;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         users = new ArrayList<>();
+        skillsToLearn = new ArrayList<>();
+        skillsToTeach = new ArrayList<>();
         databaseReference = FirebaseDatabase.getInstance().getReference("users");
-        getSkillsToTeach();
+        getData();
+        getPermissions();
+        firebaseAuth = FirebaseAuth.getInstance();
+    }
 
-        mainFragment = MainFragment.newInstance(users);
+    private void startUI(){
+        mainFragment = MainFragment.newInstance(users,skillsToLearn,skillsToTeach);
         fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.container_main, mainFragment)
@@ -62,31 +70,25 @@ public class MainActivity extends AppCompatActivity implements TeachFragment.Tea
                 .commit();
 
 
-        getPermissions();
-        firebaseAuth = FirebaseAuth.getInstance();
     }
 
-    private void getSkillsToTeach() {
+    private void getData() {
 
         databaseReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 User user = dataSnapshot.getValue(User.class);
                 users.add(user);
-                if (user.getEmail().toLowerCase().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail().toLowerCase())) {
+                if (user.getEmail().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail())) {
                     if (user.getSkillsToTeach() != null) {
-                        for (Skill skill : user.getSkillsToTeach()) {
-                            mainFragment.addInterestToTeachFragment(skill);
-
-                        }
-                        if (user.getInterests() != null) {
-                            for (Skill skill : user.getInterests()) {
-                                mainFragment.addInterestToLearnFragment(skill);
-                            }
-                        }
+                        skillsToTeach.addAll(user.getSkillsToTeach());
                     }
-                }
+                        if (user.getCurrentLearningSkills() != null) {
+                            skillsToLearn.addAll(user.getCurrentLearningSkills());
+                        }
 
+                }
+                startUI();
             }
 
             @Override
