@@ -68,11 +68,12 @@
 
             <TextView
                 style="@style/textHeading"
+                android:textSize="25sp"
                 android:id="@+id/extended_skill_description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                tools:text="cription of the jobThis is a short description of the jobThis is a short description of the jobThis is a short description of the jobThis is a short description of the jobThis is a short description of the jobThis is a short description of the jobThis is a short description of the jobThis is a short description of the jobThis is a short description of the jobThis is a short description of the jobThis is a short description of the jobThis is a short description of the jobThis is a short description of the job"
+                tools:text= "I am willing to teach you all you need on this topic,just give me a message"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -103,6 +104,7 @@
         app:layout_constraintTop_toBottomOf="@+id/imageView3" />
 
     <Button
+        style = "@style/mainActionButton"
         android:id="@+id/contact_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

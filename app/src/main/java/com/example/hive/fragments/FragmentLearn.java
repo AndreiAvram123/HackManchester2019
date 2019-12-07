@@ -32,13 +32,18 @@ public class FragmentLearn extends Fragment {
         return fragmentLearn;
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ArrayList<Skill> skillsToTeach = getArguments().getParcelableArrayList(KEY_SKILLS_TO_LEARN);
+        mainRecyclerAdapter.addSkills(skillsToTeach);
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
          View view = inflater.inflate(R.layout.fragment_fragment_learn,container,false);
          initializeRecyclerView(view);
-        ArrayList<Skill> skillsToTeach = getArguments().getParcelableArrayList(KEY_SKILLS_TO_LEARN);
-        mainRecyclerAdapter.addSkills(skillsToTeach);
          return view;
     }
     public void addInterest(Skill skill){

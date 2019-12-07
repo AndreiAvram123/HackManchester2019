@@ -12,7 +12,7 @@ public class User implements Parcelable {
 
   private String username;
   private String email;
-  private ArrayList<Skill> currentLearningSkills;
+  private ArrayList<Skill> interests;
   private ArrayList<Skill> skillsToTeach;
   private double latitude;
   private double longitute;
@@ -22,11 +22,11 @@ public class User implements Parcelable {
 
   }
 
-  public User(String username, String email, ArrayList<Skill> currentLearningSkills, ArrayList<Skill> skillsToTeach,
+  public User(String username, String email, ArrayList<Skill> interests, ArrayList<Skill> skillsToTeach,
               double latitude, double longitude, String pictureUri) {
     this.username = username;
     this.email = email;
-    this.currentLearningSkills = currentLearningSkills;
+    this.interests = interests;
     this.skillsToTeach = skillsToTeach;
     this.longitute = longitude;
     this.latitude = latitude;
@@ -37,7 +37,7 @@ public class User implements Parcelable {
   protected User(Parcel in) {
     username = in.readString();
     email = in.readString();
-    currentLearningSkills = in.createTypedArrayList(Skill.CREATOR);
+    interests = in.createTypedArrayList(Skill.CREATOR);
     skillsToTeach = in.createTypedArrayList(Skill.CREATOR);
     latitude = in.readDouble();
     longitute = in.readDouble();
@@ -64,10 +64,10 @@ public class User implements Parcelable {
 
 }
   public void addInterest(Skill skill){
-    if(currentLearningSkills ==null) {
-      currentLearningSkills = new ArrayList<>();
+    if(interests ==null) {
+      interests = new ArrayList<>();
     }
-    currentLearningSkills.add(skill);
+    interests.add(skill);
 
   }
 
@@ -80,7 +80,7 @@ public class User implements Parcelable {
   public void writeToParcel(Parcel dest, int flags) {
     dest.writeString(username);
     dest.writeString(email);
-    dest.writeTypedList(currentLearningSkills);
+    dest.writeTypedList(interests);
     dest.writeTypedList(skillsToTeach);
     dest.writeDouble(latitude);
     dest.writeDouble(longitute);
@@ -103,12 +103,12 @@ public class User implements Parcelable {
     this.email = email;
   }
 
-  public ArrayList<Skill> getCurrentLearningSkills() {
-    return currentLearningSkills;
+  public ArrayList<Skill> getInterests() {
+    return interests;
   }
 
-  public void setCurrentLearningSkills(ArrayList<Skill> currentLearningSkills) {
-    this.currentLearningSkills = currentLearningSkills;
+  public void setInterests(ArrayList<Skill> interests) {
+    this.interests = interests;
   }
 
   public ArrayList<Skill> getSkillsToTeach() {

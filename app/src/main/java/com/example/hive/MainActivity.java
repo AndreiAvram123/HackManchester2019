@@ -3,6 +3,7 @@ package com.example.hive;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -23,6 +24,7 @@ import com.example.hive.fragments.TeachFragment;
 import com.example.hive.fragments.UserProfileFragment;
 import com.example.hive.model.Skill;
 import com.example.hive.model.User;
+import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -30,8 +32,11 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
 public class MainActivity extends AppCompatActivity implements TeachFragment.TeachFragmentInterface,
         AddSkillFragment.AddSkillFragmentInterface, MainRecyclerAdapter.MainRecyclerAdapterInterface,
@@ -47,6 +52,8 @@ public class MainActivity extends AppCompatActivity implements TeachFragment.Tea
     private ArrayList<User> users;
     private ArrayList<Skill> skillsToLearn;
     private ArrayList<Skill> skillsToTeach;
+    private FusedLocationProviderClient fusedLocationClient;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,13 +63,45 @@ public class MainActivity extends AppCompatActivity implements TeachFragment.Tea
         skillsToLearn = new ArrayList<>();
         skillsToTeach = new ArrayList<>();
         databaseReference = FirebaseDatabase.getInstance().getReference("users");
+        firebaseAuth = FirebaseAuth.getInstance();
+//        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+//        fusedLocationClient.getLastLocation()
+//                .addOnSuccessListener(this, location -> {
+//                    if (location != null) {
+//                        updateCurrentUserLocation(location);
+//                    }
+//                });
         getData();
         getPermissions();
-        firebaseAuth = FirebaseAuth.getInstance();
     }
 
-    private void startUI(){
-        mainFragment = MainFragment.newInstance(users,skillsToLearn,skillsToTeach);
+    private void updateCurrentUserLocation(Location currentLocation) {
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+               for(DataSnapshot userSnapshot : dataSnapshot.getChildren()){
+                   User user = userSnapshot.getValue(User.class);
+                   if (user.getEmail().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail())) {
+                       //todo
+                       //this is the error
+                       dataSnapshot.getRef().child("latitude").setValue(currentLocation.getLatitude());
+                       dataSnapshot.getRef().child("longitude").setValue(currentLocation.getLongitude());
+                   }
+               }
+                databaseReference.removeEventListener(this);
+               getData();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    private void startUI() {
+        mainFragment = MainFragment.newInstance(users, skillsToLearn, skillsToTeach);
         fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.container_main, mainFragment)
@@ -83,13 +122,14 @@ public class MainActivity extends AppCompatActivity implements TeachFragment.Tea
                     if (user.getSkillsToTeach() != null) {
                         skillsToTeach.addAll(user.getSkillsToTeach());
                     }
-                        if (user.getCurrentLearningSkills() != null) {
-                            skillsToLearn.addAll(user.getCurrentLearningSkills());
-                        }
+                    if (user.getInterests() != null) {
+                        skillsToLearn.addAll(user.getInterests());
+                    }
 
                 }
                 startUI();
             }
+
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
@@ -114,11 +154,11 @@ public class MainActivity extends AppCompatActivity implements TeachFragment.Tea
     }
 
     private void getPermissions() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+        if (ContextCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             //request fine location permission
             ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    new String[]{ACCESS_FINE_LOCATION},
                     CODE_FINE_LOCATION);
 
         } else {
@@ -126,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements TeachFragment.Tea
                     != PackageManager.PERMISSION_GRANTED) {
                 //request fine location permission
                 ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        new String[]{ACCESS_FINE_LOCATION},
                         CODE_COURSE_LOCATION);
 
             }
@@ -156,13 +196,15 @@ public class MainActivity extends AppCompatActivity implements TeachFragment.Tea
     }
 
     private void addTeachSkillToDatabase(Skill skill) {
+
         databaseReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 User user = dataSnapshot.getValue(User.class);
                 user.addSkillToTeach(skill);
-                if (user.getEmail().toLowerCase().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail().toLowerCase())) {
+                if (user.getEmail().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail())) {
                     dataSnapshot.getRef().child("skillsToTeach").setValue(user.getSkillsToTeach());
+                    databaseReference.removeEventListener(this);
                 }
             }
 
@@ -200,7 +242,7 @@ public class MainActivity extends AppCompatActivity implements TeachFragment.Tea
     @Override
     public void openUserProfile(LatLng location) {
         User user = getUserProfile(location);
-        if(user!=null) {
+        if (user != null) {
             getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.container_main, UserProfileFragment.newInstance(user))
@@ -238,9 +280,10 @@ public class MainActivity extends AppCompatActivity implements TeachFragment.Tea
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 User user = dataSnapshot.getValue(User.class);
                 user.addInterest(skill);
-                if (user.getEmail().toLowerCase().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail().toLowerCase())) {
-                    dataSnapshot.getRef().child("interests").setValue(user.getSkillsToTeach());
+                if (user.getEmail().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail().toLowerCase())) {
+                    dataSnapshot.getRef().child("interests").setValue(user.getInterests());
                 }
+                databaseReference.removeEventListener(this);
             }
 
             @Override

@@ -71,7 +71,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     public void onMapReady(GoogleMap googleMap) {
         googleMap.setOnMarkerClickListener(this);
         map = googleMap;
-        //googleMap.setMyLocationEnabled(true);
+        googleMap.setMyLocationEnabled(true);
         addMarkers();
 
         LatLng latLng = new LatLng(53.47723, -2.25487);

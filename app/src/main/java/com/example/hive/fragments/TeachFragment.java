@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -42,14 +43,19 @@ public class TeachFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.fragment_teach, container, false);
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         teachFragmentInterface = (TeachFragmentInterface) getActivity();
-        initializeRecyclerView(layout);
-
         ArrayList<Skill> skillsToTeach = getArguments().getParcelableArrayList(KEY_SKILLS_TO_TEACH);
         mainRecyclerAdapter.addSkills(skillsToTeach);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View layout = inflater.inflate(R.layout.fragment_teach, container, false);;
+        initializeRecyclerView(layout);
+
 
         addTeachButton = layout.findViewById(R.id.add_teach_button);
         addTeachButton.setOnClickListener(view -> teachFragmentInterface.showAddSkillFragment());
